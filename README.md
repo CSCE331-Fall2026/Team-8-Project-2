@@ -16,6 +16,8 @@ Database
 
 # Database Schema and Design
 
+No AI was used to critique our database.
+
 ## Orders
 
 - order_id: To keep track of orders uniquely.
