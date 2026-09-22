@@ -4,7 +4,7 @@ Front-End:
 - Will
 
 Backend
-- Vishwanath
+- Viswanath
 - Tyler
 
 Database
