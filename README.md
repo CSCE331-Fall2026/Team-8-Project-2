@@ -15,7 +15,7 @@ PM
 - Brandon
 
 # Lab Day 9/24
-
+Arnav Karekar Lab Merge
 Brandon banch merge :D
 
 Tyler's branch merge
@@ -23,6 +23,8 @@ Tyler's branch merge
 # Database Schema and Design
 
 No AI was used to critique our database.
+
+Other change that will made
 
 ## Orders
 
