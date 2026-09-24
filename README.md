@@ -18,9 +18,13 @@ PM
 Arnav Karekar Lab Merge - another change
 Brandon banch merge :D
 
+Tyler's branch merge
+
 # Database Schema and Design
 
 No AI was used to critique our database.
+
+Other change that will made
 
 ## Orders
 
