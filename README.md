@@ -16,6 +16,8 @@ Database
 
 # Lab Day 9/24
 
+Arnav Karekar Lab Merge
+
 # Database Schema and Design
 
 No AI was used to critique our database.
