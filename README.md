@@ -18,6 +18,8 @@ PM
 
 Brandon banch merge :D
 
+Tyler's branch merge
+
 # Database Schema and Design
 
 No AI was used to critique our database.
