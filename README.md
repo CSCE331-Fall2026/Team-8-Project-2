@@ -16,7 +16,7 @@ Database
 
 # Lab Day 9/24
 
-Arnav Karekar Lab Merge
+Arnav Karekar Lab Merge - second change
 
 # Database Schema and Design
 
