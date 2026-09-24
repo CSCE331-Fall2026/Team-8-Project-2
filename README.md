@@ -20,6 +20,8 @@ Database
 
 No AI was used to critique our database.
 
+Other change that will made
+
 ## Orders
 
 - order_id: To keep track of orders uniquely.
