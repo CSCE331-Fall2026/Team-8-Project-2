@@ -10,11 +10,13 @@ Backend
 - Viswanath
 - Tyler
 
-Database
+PM
 
 - Brandon
 
 # Lab Day 9/24
+
+Brandon banch merge :D
 
 # Database Schema and Design
 
