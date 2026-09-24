@@ -14,6 +14,8 @@ Database
 
 - Brandon
 
+# Lab Day 9/24
+
 # Database Schema and Design
 
 No AI was used to critique our database.
