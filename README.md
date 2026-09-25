@@ -10,17 +10,21 @@ Backend
 - Viswanath
 - Tyler
 
-Database
+PM
 
 Will Wrote stuff here
 
 - Brandon
 
 # Lab Day 9/24
+Arnav Karekar Lab Merge
+Brandon banch merge :D
 
 # Database Schema and Design
 
 No AI was used to critique our database.
+
+Other change that will made
 
 ## Orders
 
