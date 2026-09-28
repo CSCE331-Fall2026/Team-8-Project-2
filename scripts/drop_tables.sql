@@ -1,3 +1,5 @@
+/* From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/drop_tables.sql */
+
 DROP TABLE IF EXISTS "order_details" CASCADE;
 DROP TABLE IF EXISTS "menu_item_ingredients" CASCADE;
 DROP TABLE IF EXISTS "orders" CASCADE;
