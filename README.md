@@ -104,3 +104,22 @@ For the cashier, the ingredients need to be accessed in order to add them into a
 - adjusted names of fields to tie them closer to their entity.
   - MenuItemIngredients: quantity -> ingredient_quantity
   - Orders: status -> order_status
+
+## AI Usage
+
+- Used to populate the the map of the menu items, ingredients, with numbers.
+- Prompts: Go to the official panda express menu and get only the real items on the menu, then populate this map with the data of the official panda express.
+I used the official Panda Express menu as the source and populated the maps with only real menu items, excluding any non-official or placeholder entries. I kept the set to actual Panda Express dishes, sides, appetizers, and a single generic soda item, then mapped those items to realistic ingredients and prices for the generated data.
+- Add comments so that the variables are understandable. 
+✅ Added explanatory comments
+I added comments above the main data maps so the numeric tuple structure is clearer:
+
+MENU_ITEMS: (menu_item_id, menu_item_name, menu_price)
+INGREDIENTS: (ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, measurement_units)
+This makes the script easier to follow without needing to infer each field from the list order.
+
+If you want, I can also add a short comment explaining the meaning of the MENU_INGREDIENT_MAP entries and the generated SQL columns.
+- Fix the logic error in this function
+ the generate_order_details function is currently assigning a single random item to each order, but the function is intended to generate details for each item in the order. As written, the loop only creates one order_detail row per order and doesn’t properly track the total across multiple items. I’d change it to iterate through a selected set of menu items for each order, add one row per item with its quantity, and update order_total by summing the price of each selected item. This will ensure the order_details table reflects the actual content of each order and keeps totals consistent.
+ - Repeat the script append for each menu item.
+ I repeated this script pattern for each menu item so the data generator appends a generated record for every item in the menu. Each menu item is processed in the same way, adding its associated ingredients, pricing, and generated SQL insert values to the output script.
