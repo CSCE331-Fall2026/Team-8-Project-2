@@ -191,7 +191,6 @@ def generate_orders(order_count=10):
     start_date = datetime(2024, 1, 1, 10, 0, 0)
     end_date = datetime(2025, 12, 31, 21, 0, 0)
     rows = []
-
     for order_id in range(1, order_count + 1):
         created_at = random_datetime(start_date, end_date)
         while created_at.weekday() >= 5 or created_at.hour < 10 or created_at.hour >= 21:
