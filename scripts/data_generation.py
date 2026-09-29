@@ -1,9 +1,11 @@
+# From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/generated_data.sql
+
 import random
 from datetime import datetime, timedelta
 from pathlib import Path
 
 random.seed(42)
-PEAK_DAYS = [date(2024, 10, 5), date(2025, 11, 30)]
+PEAK_DAYS = [datetime(2024, 10, 5), datetime(2025, 11, 30)]
 
 # menu_item_id, menu_item_name, menu_price
 MENU_ITEMS = [
@@ -32,42 +34,42 @@ MENU_ITEMS = [
     (23, "Soda", 2.19),
 ]
 
-# ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, measurement_units
+# ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units
 INGREDIENTS = [
-    (1, "Rice", 180.0, "pantry", 0.55, "lb"),
-    (2, "Brown Rice", 170.0, "pantry", 0.60, "lb"),
-    (3, "Chicken", 75.0, "refrigerator", 2.25, "lb"),
-    (4, "Beef", 42.0, "freezer", 3.30, "lb"),
-    (5, "Shrimp", 32.0, "freezer", 3.80, "lb"),
-    (6, "Broccoli", 80.0, "refrigerator", 0.70, "lb"),
-    (7, "Mushrooms", 48.0, "refrigerator", 0.95, "lb"),
-    (8, "Green Beans", 60.0, "refrigerator", 0.85, "lb"),
-    (9, "Bell Pepper", 70.0, "refrigerator", 0.60, "lb"),
-    (10, "Onion", 85.0, "pantry", 0.30, "lb"),
-    (11, "Carrots", 95.0, "refrigerator", 0.45, "lb"),
-    (12, "Pineapple", 45.0, "refrigerator", 0.90, "lb"),
-    (13, "Orange Sauce", 90.0, "pantry", 0.75, "bottle"),
-    (14, "Walnuts", 35.0, "pantry", 1.10, "lb"),
-    (15, "Honey", 50.0, "pantry", 0.90, "bottle"),
-    (16, "Sesame Seeds", 25.0, "pantry", 0.50, "oz"),
-    (17, "Soy Sauce", 95.0, "pantry", 0.35, "bottle"),
-    (18, "Chow Mein Noodles", 110.0, "pantry", 0.80, "lb"),
-    (19, "Egg Roll Wrapper", 70.0, "pantry", 0.25, "each"),
-    (20, "Spring Roll Wrapper", 70.0, "pantry", 0.40, "each"),
-    (21, "Cream Cheese", 30.0, "refrigerator", 1.20, "lb"),
-    (22, "Wonton Wrapper", 75.0, "pantry", 0.30, "each"),
-    (23, "Apple Pie Filling", 40.0, "refrigerator", 0.85, "lb"),
-    (24, "Cucumber", 60.0, "refrigerator", 0.40, "lb"),
-    (25, "Cabbage", 65.0, "refrigerator", 0.35, "lb"),
-    (26, "Tomato", 55.0, "refrigerator", 0.50, "lb"),
-    (27, "Garlic", 45.0, "pantry", 0.20, "head"),
-    (28, "Ginger", 35.0, "refrigerator", 0.25, "lb"),
-    (29, "Egg", 80.0, "refrigerator", 0.35, "each"),
-    (30, "Sweet Chili Sauce", 55.0, "pantry", 0.70, "bottle"),
-    (31, "Teriyaki Sauce", 60.0, "pantry", 0.65, "bottle"),
-    (32, "Black Pepper", 28.0, "pantry", 0.22, "oz"),
-    (33, "Carbonated Water", 200.0, "pantry", 0.08, "liter"),
-    (34, "Soda Syrup", 120.0, "pantry", 0.90, "liter"),
+    (1, "Rice", 180.0, "pantry", 0.55, 40.0, "lb"),
+    (2, "Brown Rice", 170.0, "pantry", 0.60, 40.0, "lb"),
+    (3, "Chicken", 75.0, "refrigerator", 2.25, 50.0, "lb"),
+    (4, "Beef", 42.0, "freezer", 3.30, 40.0, "lb"),
+    (5, "Shrimp", 32.0, "freezer", 3.80, 20.0, "lb"),
+    (6, "Broccoli", 80.0, "refrigerator", 0.70, 35.0, "lb"),
+    (7, "Mushrooms", 48.0, "refrigerator", 0.95, 20.0, "lb"),
+    (8, "Green Beans", 60.0, "refrigerator", 0.85, 20.0, "lb"),
+    (9, "Bell Pepper", 70.0, "refrigerator", 0.60, 20.0, "lb"),
+    (10, "Onion", 85.0, "pantry", 0.30, 30.0, "lb"),
+    (11, "Carrots", 95.0, "refrigerator", 0.45, 30.0, "lb"),
+    (12, "Pineapple", 45.0, "refrigerator", 0.90, 20.0, "lb"),
+    (13, "Orange Sauce", 90.0, "pantry", 0.75, 50.0, "bottle"),
+    (14, "Walnuts", 35.0, "pantry", 1.10, 20.0, "lb"),
+    (15, "Honey", 50.0, "pantry", 0.90, 30.0, "bottle"),
+    (16, "Sesame Seeds", 25.0, "pantry", 0.50, 72.0, "oz"),
+    (17, "Soy Sauce", 95.0, "pantry", 0.35, 40.0, "bottle"),
+    (18, "Chow Mein Noodles", 110.0, "pantry", 0.80, 75.0, "lb"),
+    (19, "Egg Roll Wrapper", 70.0, "pantry", 0.25, 100.0, "each"),
+    (20, "Spring Roll Wrapper", 70.0, "pantry", 0.40, 100.0, "each"),
+    (21, "Cream Cheese", 30.0, "refrigerator", 1.20, 25.0, "lb"),
+    (22, "Wonton Wrapper", 75.0, "pantry", 0.30, 100.0, "each"),
+    (23, "Apple Pie Filling", 40.0, "refrigerator", 0.85, 20.0, "lb"),
+    (24, "Cucumber", 60.0, "refrigerator", 0.40, 40.0, "lb"),
+    (25, "Cabbage", 65.0, "refrigerator", 0.35, 50.0, "lb"),
+    (26, "Tomato", 55.0, "refrigerator", 0.50, 50.0, "lb"),
+    (27, "Garlic", 45.0, "pantry", 0.20, 35.0, "head"),
+    (28, "Ginger", 35.0, "refrigerator", 0.25, 20.0, "lb"),
+    (29, "Egg", 80.0, "refrigerator", 0.35, 120.0, "each"),
+    (30, "Sweet Chili Sauce", 55.0, "pantry", 0.70, 50.0, "bottle"),
+    (31, "Teriyaki Sauce", 60.0, "pantry", 0.65, 50.0, "bottle"),
+    (32, "Black Pepper", 28.0, "pantry", 0.22, 48.0, "oz"),
+    (33, "Carbonated Water", 200.0, "pantry", 0.08, 150.0, "liter"),
+    (34, "Soda Syrup", 120.0, "pantry", 0.90, 100.0, "liter"),
 ]
 
 MENU_INGREDIENT_MAP = {
@@ -141,7 +143,7 @@ def generate_menu_items():
 
 def build_ingredient_rows():
     ingredient_rows = []
-    for ingredient_id, name, qty_in_stock, storage_type, ingredient_cost, measurement_units in INGREDIENTS:
+    for ingredient_id, name, qty_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units in INGREDIENTS:
         ingredient_rows.append(
             {
                 "ingredient_id": ingredient_id,
@@ -153,7 +155,7 @@ def build_ingredient_rows():
                     datetime(2025, 1, 1),
                     datetime(2026, 12, 31),
                 ),
-                "min_qty_on_hand": round(qty_in_stock * 0.2 + random.uniform(2, 8), 2),
+                "min_qty_on_hand": min_qty_on_hand,
                 "measurement_units": measurement_units,
             }
         )
