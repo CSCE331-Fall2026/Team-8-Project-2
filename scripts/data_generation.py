@@ -1,4 +1,10 @@
-# From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/generated_data.sql
+''' 
+From root project directory: 
+
+python3 ./scripts/data_generation.py
+psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/generated_data.sql
+
+'''
 
 import random
 from datetime import datetime, timedelta
