@@ -167,7 +167,7 @@ def generate_menu_item_ingredient_rows(menu_items, ingredients):
     for menu_item in menu_items:
         menu_name = menu_item["menu_item_name"]
         ingredient_names = MENU_INGREDIENT_MAP.get(menu_name, [random.choice([x[1] for x in INGREDIENTS])])
-        selected_ingredients = random.sample(ingredient_names, k=random.randint(3, min(len(ingredient_names), 6)))
+        selected_ingredients = random.sample(ingredient_names, k=random.randint(1, min(len(ingredient_names), 6)))
 
         for ingredient_name in selected_ingredients:
             ingredient_id = ingredient_lookup[ingredient_name]
