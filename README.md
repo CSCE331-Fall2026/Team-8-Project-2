@@ -17,6 +17,7 @@ Will Wrote stuff here
 - Brandon
 
 # Lab Day 9/24
+
 Arnav Karekar Lab Merge - another change
 Brandon banch merge :D
 
@@ -46,19 +47,39 @@ For the cashier, this is meant to help them keep track of each item, when it was
 ## OrderDetails
 
 - order_detail_id: Tracks an individual product contained in a larger order.
-- menu_item (FK): Foreign key that connects to the highest level product entity for items such as bowls, plates, combos, etc. that hold ingredients.
+- combo_id (FK): Foreign key that connects to the highest level product entity for items such as bowls, plates, etc. that hold entrees and sides.
 - order_id (FK): To keep track of the order to which the order details entity belongs to.
 - order_qty: Tracks how many of a specific MenuItem are in an Order
 
-In order to facilitate the many-to-many relation between many orders containing many menu items, this join table exists to allow for orders to contain multiple different items from the menu.
+In order to facilitate the many-to-many relation between many orders containing many combo items, this join table exists to allow for orders to contain multiple different items from the menu.
 
 For the cashier, tracking the order quantity allows for the count of a specific menu item to simply be duplicated instead of requiring the same order to be rung up twice. This will help to reduce the time a customer spends at a register.
+
+## Combos
+
+- combo_id: Tracks an individual combo being ordered
+- combo_name: Hardcoded names of potential order types
+- combo_price: How much this combo variation costs
+
+This table is the first thing an employee interacts with when ringing up an order for a customer.
+
+The manager will be able to track what types of orders people are most commonly making.
+
+## ComboDetails
+
+- combo_detail_id: Tracks an individual item being added to a combo
+- menu_item_id: Tracks which entree/side is being added to a given combo
+- combo_id: Tracks which combo a menu item is being assigned to
+- servings: How much of a menu item is being added in this detail
+
+This table allows for a many-to-many relation to exist between combos and menu items. Because it exists, a cashier will not have to scroll down a large list looking for the exact order permuation that the customer asks for.
 
 ## MenuItem
 
 - menu_item_id: To keep track of each menu item uniquely such as bowls, plates, and combos.
 - menu_item_name: To keep track of the menu item name.
-- menu_price: The cost of the item the customer needs to pay.
+- premium_charge: For applicable items, adds a flat charge on top of the base price. This column will be used more on the business logic of calculating order price.
+- menu_price: The cost of the item the customer needs to pay if it is purchased a la carte.
 
 For the manager, this will allow them to track what items on the menu are performing well and are the most popular. In addition, it will allow for them to calculate the profit for each item by comparing the menu_price to the sum of the ingredient costs for the menu item.
 
@@ -70,7 +91,6 @@ For the cashier, this entity exists to be able to ring up an order with multiple
 - menu_item_id (FK): Tracks the individual menu item that an ingredient is becoming a part of. In the previous example this would be the bowl the chicken is going into.
 - ingredient_id (FK): Tracks the ingredient, which in this case would be the chicken.
 - ingredient_quantity: Allows for multiple servings of a single ingredient in one menu item.
-- premium_charge: Allows for an upcharge to be added for premium products.
 
 This is another join table that bridges the many-to-many relation of many menu items containing many ingredients. This functionally allows for the cashier to provide mixed ingredient bowls and the quantity field helps a manager track how much of each ingredient is being sold and for the system to update the stock accordingly.
 
@@ -105,21 +125,37 @@ For the cashier, the ingredients need to be accessed in order to add them into a
   - MenuItemIngredients: quantity -> ingredient_quantity
   - Orders: status -> order_status
 
+### Changes in response to Database Population
+
+While attempting to create test data, the group realized there was a missing step between orders and ingredients. MenuItems was too ambiguous and did not facilitate the creation of combo items like bowls and plates (what you actually pay for as a customer) and the creation of the entrees from individual ingredients like orange chicken.
+
+- add 2 new tables: Combos and ComboDetails
+  - Combos bridges the functional gap we saw in our previous schema and we now have 2 separate entities to track what a customer asks for and the recipes made by the employees.
+  - ComboDetails is the join table that allows for the many-to-many relation to exist between Combos and MenuItems so that every permutation of combo does not need to be individually defined.
+
+  - Combos:
+    - combo_id (PK), combo_name, combo_price
+  - ComboDetails:
+    - combo_detail_id (PK), menu_item_id (FK), combo_id (FK), servings
+
+  - Renamed MenuItemIngredients to MenuItemDetails to keep naming conventions consistent
+
 ## AI Usage
 
 - Used to populate the the map of the menu items, ingredients, with numbers.
 - Prompts: Go to the official panda express menu and get only the real items on the menu, then populate this map with the data of the official panda express.
-I used the official Panda Express menu as the source and populated the maps with only real menu items, excluding any non-official or placeholder entries. I kept the set to actual Panda Express dishes, sides, appetizers, and a single generic soda item, then mapped those items to realistic ingredients and prices for the generated data.
-- Add comments so that the variables are understandable. 
-✅ Added explanatory comments
-I added comments above the main data maps so the numeric tuple structure is clearer:
+  I used the official Panda Express menu as the source and populated the maps with only real menu items, excluding any non-official or placeholder entries. I kept the set to actual Panda Express dishes, sides, appetizers, and a single generic soda item, then mapped those items to realistic ingredients and prices for the generated data.
+- Add comments so that the variables are understandable.
+  ✅ Added explanatory comments
+  I added comments above the main data maps so the numeric tuple structure is clearer:
 
 MENU_ITEMS: (menu_item_id, menu_item_name, menu_price)
 INGREDIENTS: (ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, measurement_units)
 This makes the script easier to follow without needing to infer each field from the list order.
 
 If you want, I can also add a short comment explaining the meaning of the MENU_INGREDIENT_MAP entries and the generated SQL columns.
+
 - Fix the logic error in this function
- the generate_order_details function is currently assigning a single random item to each order, but the function is intended to generate details for each item in the order. As written, the loop only creates one order_detail row per order and doesn’t properly track the total across multiple items. I’d change it to iterate through a selected set of menu items for each order, add one row per item with its quantity, and update order_total by summing the price of each selected item. This will ensure the order_details table reflects the actual content of each order and keeps totals consistent.
- - Repeat the script append for each menu item.
- I repeated this script pattern for each menu item so the data generator appends a generated record for every item in the menu. Each menu item is processed in the same way, adding its associated ingredients, pricing, and generated SQL insert values to the output script.
+  the generate_order_details function is currently assigning a single random item to each order, but the function is intended to generate details for each item in the order. As written, the loop only creates one order_detail row per order and doesn’t properly track the total across multiple items. I’d change it to iterate through a selected set of menu items for each order, add one row per item with its quantity, and update order_total by summing the price of each selected item. This will ensure the order_details table reflects the actual content of each order and keeps totals consistent.
+- Repeat the script append for each menu item.
+  I repeated this script pattern for each menu item so the data generator appends a generated record for every item in the menu. Each menu item is processed in the same way, adding its associated ingredients, pricing, and generated SQL insert values to the output script.
