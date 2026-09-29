@@ -56,3 +56,23 @@ LIMIT 1;
 
 -- best of the worst
 
+
+-- Top 10 Days by Sales
+SELECT created_at::date AS day,
+       SUM(order_total) AS total_sales
+FROM orders
+GROUP BY day
+ORDER BY total_sales DESC
+LIMIT 10;
+
+
+-- 20 Valid Menu Items
+SELECT COUNT(*) AS makeable_menu_items,
+       COUNT(*) >= 20 AS passes
+FROM (                     
+    SELECT mi.menu_item_id
+    FROM menu_item_ingredients mi
+    JOIN ingredients i ON mi.ingredient_id = i.ingredient_id
+    GROUP BY mi.menu_item_id
+    HAVING MIN(i.qty_in_stock) > 0
+) makeable;
