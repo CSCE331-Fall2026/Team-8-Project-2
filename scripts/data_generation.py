@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 random.seed(42)
+PEAK_DAYS = [date(2024, 10, 5), date(2025, 11, 30)]
 
 # menu_item_id, menu_item_name, menu_price
 MENU_ITEMS = [
@@ -212,6 +213,10 @@ def generate_orders(order_count=10):
                 "order_total": 0.0,
             }
         )
+
+    for peak in PEAK_DAYS:
+        for r in [r for r in rows if r["created_at"].date() == peak]:
+            rows.append({**r, "order_id": len(rows) + 1})
 
     return rows
 
