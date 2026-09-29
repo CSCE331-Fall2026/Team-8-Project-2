@@ -1,3 +1,5 @@
+
+
 INSERT INTO menu_items (menu_item_id, menu_item_name, menu_price) VALUES
 (1, 'The Original Orange Chicken', 7.45),
 (2, 'Honey Walnut Shrimp (Premium)', 8.4),
