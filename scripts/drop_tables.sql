@@ -5,3 +5,7 @@ DROP TABLE IF EXISTS "menu_item_ingredients" CASCADE;
 DROP TABLE IF EXISTS "orders" CASCADE;
 DROP TABLE IF EXISTS "menu_items" CASCADE;
 DROP TABLE IF EXISTS "ingredients" CASCADE;
+
+DROP TYPE IF EXISTS "order_status" CASCADE;
+DROP TYPE IF EXISTS "payment_method" CASCADE;
+DROP TYPE IF EXISTS "storage_type" CASCADE;
