@@ -1,3 +1,5 @@
+/* From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/validation.sql */
+
 ALTER TABLE orders
 ADD CONSTRAINT CK_operating_hours
 CHECK (
@@ -71,7 +73,7 @@ SELECT COUNT(*) AS makeable_menu_items,
        COUNT(*) >= 20 AS passes
 FROM (                     
     SELECT mi.menu_item_id
-    FROM menu_item_ingredients mi
+    FROM menu_item_details mi
     JOIN ingredients i ON mi.ingredient_id = i.ingredient_id
     GROUP BY mi.menu_item_id
     HAVING MIN(i.qty_in_stock) > 0
