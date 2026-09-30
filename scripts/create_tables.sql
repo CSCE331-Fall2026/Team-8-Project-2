@@ -3,6 +3,7 @@
 CREATE TYPE order_status AS ENUM ('paid', 'canceled', 'refunded');
 CREATE TYPE payment_method AS ENUM ('credit_card', 'debit_card', 'cash', 'gift_card', 'meal_pass');
 CREATE TYPE storage_type AS ENUM ('freezer', 'refrigerator', 'pantry');
+CREATE TYPE combo_type AS ENUM ('Bowl', 'Plate', 'Big Plate', 'Family Meal', 'A la carte');
 
 CREATE TABLE orders (
     order_id INT PRIMARY KEY,
@@ -55,5 +56,5 @@ CREATE TABLE menu_item_details (
     menu_item_detail_id INT PRIMARY KEY,
     menu_item_id INT REFERENCES menu_items(menu_item_id),
     ingredient_id INT REFERENCES ingredients(ingredient_id),
-    ingredient_qty FLOAT
+    ingredient_quantity FLOAT
 );

@@ -177,10 +177,10 @@ def build_ingredient_rows():
     return ingredient_rows
 
 
-def generate_menu_item_ingredient_rows(menu_items, ingredients):
+def generate_menu_item_details_rows(menu_items, ingredients):
     ingredient_lookup = {item[1]: item[0] for item in INGREDIENTS}
     rows = []
-    menu_item_ingredient_id = 1
+    menu_item_detail_id = 1
 
     for menu_item in menu_items:
         menu_name = menu_item["menu_item_name"]
@@ -190,13 +190,13 @@ def generate_menu_item_ingredient_rows(menu_items, ingredients):
             ingredient_quantity = 1
             rows.append(
                 {
-                    "menu_item_ingredient_id": menu_item_ingredient_id,
+                    "menu_item_detail_id": menu_item_detail_id,
                     "menu_item_id": menu_item["menu_item_id"],
                     "ingredient_id": ingredient_id,
                     "ingredient_quantity": ingredient_quantity,
                 }
             )
-            menu_item_ingredient_id += 1
+            menu_item_detail_id += 1
 
     return rows
 
@@ -295,7 +295,7 @@ def build_sql_script(order_count=10):
     orders = generate_orders(order_count)
     combo_detail_rows = generate_combo_details(menu_items, combos)
     order_detail_rows = generate_order_details(orders, combos)
-    menu_item_ingredient_rows = generate_menu_item_ingredient_rows(menu_items, ingredient_rows)
+    menu_item_detail_rows = generate_menu_item_details_rows(menu_items, ingredient_rows)
 
     sql_script = ""
     sql_script += build_insert_sql(
@@ -324,16 +324,16 @@ def build_sql_script(order_count=10):
         ],
     )
     sql_script += build_insert_sql(
-        "menu_item_ingredients",
-        ["menu_item_ingredient_id", "menu_item_id", "ingredient_id", "ingredient_quantity"],
+        "menu_item_details",
+        ["menu_item_detail_id", "menu_item_id", "ingredient_id", "ingredient_quantity"],
         [
             (
-                row["menu_item_ingredient_id"],
+                row["menu_item_detail_id"],
                 row["menu_item_id"],
                 row["ingredient_id"],
                 row["ingredient_quantity"],
             )
-            for row in menu_item_ingredient_rows
+            for row in menu_item_detail_rows
         ],
     )
     sql_script += build_insert_sql(
