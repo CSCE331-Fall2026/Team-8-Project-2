@@ -16,13 +16,14 @@ CREATE TABLE orders (
 CREATE TABLE menu_items (
     menu_item_id INT PRIMARY KEY,
     menu_item_name VARCHAR(50),
+    premium_charge FLOAT DEFAULT 0,
     menu_price FLOAT
 );
 
 CREATE TABLE ingredients (
     ingredient_id INT PRIMARY KEY,
     ingredient_name VARCHAR(50),
-    qty_in_stock FLOAT,
+    quantity_in_stock FLOAT,
     storage_type storage_type,
     ingredient_cost FLOAT,
     expiry_date TIMESTAMPTZ,
@@ -30,17 +31,29 @@ CREATE TABLE ingredients (
     measurement_units VARCHAR(20)
 );
 
-CREATE TABLE order_details (
-    order_detail_id INT PRIMARY KEY,
-    menu_item_id INT REFERENCES menu_items(menu_item_id),
-    order_id INT REFERENCES orders(order_id),
-    order_qty INT
-);
-
 CREATE TABLE menu_item_ingredients (
     menu_item_ingredient_id INT PRIMARY KEY,
     menu_item_id INT REFERENCES menu_items(menu_item_id),
     ingredient_id INT REFERENCES ingredients(ingredient_id),
-    ingredient_qty FLOAT,
-    premium_charge FLOAT
+    ingredient_quantity FLOAT
+);
+
+CREATE TABLE combos (
+    combo_id INT PRIMARY KEY,
+    combo_name VARCHAR(50),
+    combo_price FLOAT
+);
+
+CREATE TABLE combo_details (
+    combo_detail_id INT PRIMARY KEY,
+    menu_item_id INT REFERENCES menu_items(menu_item_id),
+    combo_id INT REFERENCES combos(combo_id),
+    servings FLOAT
+);
+
+CREATE TABLE order_details (
+    order_detail_id INT PRIMARY KEY,
+    combo_id INT REFERENCES combos(combo_id),
+    order_id INT REFERENCES orders(order_id),
+    order_qty INT
 );
