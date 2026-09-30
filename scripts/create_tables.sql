@@ -29,7 +29,7 @@ CREATE TABLE menu_items (
 CREATE TABLE ingredients (
     ingredient_id INT PRIMARY KEY,
     ingredient_name VARCHAR(50),
-    qty_in_stock FLOAT,
+    quantity_in_stock FLOAT,
     storage_type storage_type,
     ingredient_cost FLOAT,
     expiry_date TIMESTAMPTZ,

@@ -104,6 +104,14 @@ MENU_INGREDIENT_MAP = {
     "Soda": ["Carbonated Water", "Soda Syrup"],
 }
 
+COMBOS = [
+    (1, "Bowl", 8.99),
+    (2, "Plate", 10.99),
+    (3, "Big Plate", 12.99),
+    (4, "Family Meal", 24.99),
+    (5, "A la carte", 0.00)
+] 
+
 
 def iso_timestamp(value: datetime) -> str:
     return value.isoformat(timespec="seconds")
@@ -141,6 +149,7 @@ def generate_menu_items():
         {
             "menu_item_id": item_id,
             "menu_item_name": name,
+            "premium_charge": 2.5 if "Premium" in name else 0.0,
             "menu_price": round(price, 2),
         }
         for item_id, name, price in MENU_ITEMS
@@ -149,12 +158,12 @@ def generate_menu_items():
 
 def build_ingredient_rows():
     ingredient_rows = []
-    for ingredient_id, name, qty_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units in INGREDIENTS:
+    for ingredient_id, name, quantity_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units in INGREDIENTS:
         ingredient_rows.append(
             {
                 "ingredient_id": ingredient_id,
                 "ingredient_name": name,
-                "qty_in_stock": round(random.uniform(qty_in_stock * 0.85, qty_in_stock * 1.15), 2),
+                "quantity_in_stock": round(random.uniform(quantity_in_stock * 0.85, quantity_in_stock * 1.15), 2),
                 "storage_type": storage_type,
                 "ingredient_cost": round(ingredient_cost + random.uniform(-0.15, 0.35), 2),
                 "expiry_date": random_datetime(
@@ -176,22 +185,46 @@ def generate_menu_item_ingredient_rows(menu_items, ingredients):
     for menu_item in menu_items:
         menu_name = menu_item["menu_item_name"]
         ingredient_names = MENU_INGREDIENT_MAP.get(menu_name, [random.choice([x[1] for x in INGREDIENTS])])
-        selected_ingredients = random.sample(ingredient_names, k=random.randint(1, min(len(ingredient_names), 6)))
-
-        for ingredient_name in selected_ingredients:
+        for ingredient_name in ingredient_names:
             ingredient_id = ingredient_lookup[ingredient_name]
-            ingredient_qty = round(random.uniform(0.35, 2.5), 2)
-            premium_charge = round(random.uniform(0.0, 2.5), 2) if random.random() < 0.25 else 0.0
+            ingredient_quantity = 1
             rows.append(
                 {
                     "menu_item_ingredient_id": menu_item_ingredient_id,
                     "menu_item_id": menu_item["menu_item_id"],
                     "ingredient_id": ingredient_id,
-                    "ingredient_qty": ingredient_qty,
-                    "premium_charge": premium_charge,
+                    "ingredient_quantity": ingredient_quantity,
                 }
             )
             menu_item_ingredient_id += 1
+
+    return rows
+
+
+def generate_combos():
+    return [
+        {"combo_id": combo_id, "combo_name": name, "combo_price": round(price, 2)}
+        for combo_id, name, price in COMBOS
+    ]
+
+
+def generate_combo_details(menu_items, combos):
+    rows = []
+    combo_detail_id = 1
+    menu_item_ids = [item["menu_item_id"] for item in menu_items]
+
+    for combo in combos:
+        selected_items = random.sample(menu_item_ids, k=random.randint(2, min(4, len(menu_item_ids))))
+        for menu_item_id in selected_items:
+            rows.append(
+                {
+                    "combo_detail_id": combo_detail_id,
+                    "menu_item_id": menu_item_id,
+                    "combo_id": combo["combo_id"],
+                    "servings": round(random.uniform(0.5, 2.0), 2),
+                }
+            )
+            combo_detail_id += 1
 
     return rows
 
@@ -229,27 +262,26 @@ def generate_orders(order_count=10):
     return rows
 
 
-def generate_order_details(orders, menu_items):
+def generate_order_details(orders, combos):
     rows = []
-    order_details_id = 1
-    item_lookup = {item["menu_item_id"]: item for item in menu_items}
+    order_detail_id = 1
 
     for order in orders:
-        menu_item_id = random.choice([item["menu_item_id"] for item in menu_items])
+        selected_combos = random.sample(combos, k=random.randint(1, min(3, len(combos))))
         order_total = 0.0
 
-        qty = random.randint(1, 3)
-        menu_price = item_lookup[menu_item_id]["menu_price"]
-        order_total = round(menu_price * qty, 2)
-        rows.append(
-            {
-                "order_detail_id": order_details_id,
-                "menu_item_id": menu_item_id,
-                "order_id": order["order_id"],
-                "order_qty": qty,
-            }
-        )
-        order_details_id += 1
+        for combo in selected_combos:
+            qty = random.randint(1, 3)
+            order_total = round(order_total + combo["combo_price"] * qty, 2)
+            rows.append(
+                {
+                    "order_detail_id": order_detail_id,
+                    "combo_id": combo["combo_id"],
+                    "order_id": order["order_id"],
+                    "order_qty": qty,
+                }
+            )
+            order_detail_id += 1
 
         order["order_total"] = order_total
 
@@ -259,27 +291,29 @@ def generate_order_details(orders, menu_items):
 def build_sql_script(order_count=10):
     menu_items = generate_menu_items()
     ingredient_rows = build_ingredient_rows()
+    combos = generate_combos()
     orders = generate_orders(order_count)
-    order_detail_rows = generate_order_details(orders, menu_items)
+    combo_detail_rows = generate_combo_details(menu_items, combos)
+    order_detail_rows = generate_order_details(orders, combos)
     menu_item_ingredient_rows = generate_menu_item_ingredient_rows(menu_items, ingredient_rows)
 
     sql_script = ""
     sql_script += build_insert_sql(
         "menu_items",
-        ["menu_item_id", "menu_item_name", "menu_price"],
+        ["menu_item_id", "menu_item_name", "premium_charge", "menu_price"],
         [
-            (row["menu_item_id"], row["menu_item_name"], row["menu_price"])
+            (row["menu_item_id"], row["menu_item_name"], row["premium_charge"], row["menu_price"])
             for row in menu_items
         ],
     )
     sql_script += build_insert_sql(
         "ingredients",
-        ["ingredient_id", "ingredient_name", "qty_in_stock", "storage_type", "ingredient_cost", "expiry_date", "min_qty_on_hand", "measurement_units"],
+        ["ingredient_id", "ingredient_name", "quantity_in_stock", "storage_type", "ingredient_cost", "expiry_date", "min_qty_on_hand", "measurement_units"],
         [
             (
                 row["ingredient_id"],
                 row["ingredient_name"],
-                row["qty_in_stock"],
+                row["quantity_in_stock"],
                 row["storage_type"],
                 row["ingredient_cost"],
                 row["expiry_date"],
@@ -287,6 +321,35 @@ def build_sql_script(order_count=10):
                 row["measurement_units"],
             )
             for row in ingredient_rows
+        ],
+    )
+    sql_script += build_insert_sql(
+        "menu_item_ingredients",
+        ["menu_item_ingredient_id", "menu_item_id", "ingredient_id", "ingredient_quantity"],
+        [
+            (
+                row["menu_item_ingredient_id"],
+                row["menu_item_id"],
+                row["ingredient_id"],
+                row["ingredient_quantity"],
+            )
+            for row in menu_item_ingredient_rows
+        ],
+    )
+    sql_script += build_insert_sql(
+        "combos",
+        ["combo_id", "combo_name", "combo_price"],
+        [
+            (row["combo_id"], row["combo_name"], row["combo_price"])
+            for row in combos
+        ],
+    )
+    sql_script += build_insert_sql(
+        "combo_details",
+        ["combo_detail_id", "menu_item_id", "combo_id", "servings"],
+        [
+            (row["combo_detail_id"], row["menu_item_id"], row["combo_id"], row["servings"])
+            for row in combo_detail_rows
         ],
     )
     sql_script += build_insert_sql(
@@ -306,24 +369,10 @@ def build_sql_script(order_count=10):
     )
     sql_script += build_insert_sql(
         "order_details",
-        ["order_detail_id", "menu_item_id", "order_id", "order_qty"],
+        ["order_detail_id", "combo_id", "order_id", "order_qty"],
         [
-            (row["order_detail_id"], row["menu_item_id"], row["order_id"], row["order_qty"])
+            (row["order_detail_id"], row["combo_id"], row["order_id"], row["order_qty"])
             for row in order_detail_rows
-        ],
-    )
-    sql_script += build_insert_sql(
-        "menu_item_ingredients",
-        ["menu_item_ingredient_id", "menu_item_id", "ingredient_id", "ingredient_qty", "premium_charge"],
-        [
-            (
-                row["menu_item_ingredient_id"],
-                row["menu_item_id"],
-                row["ingredient_id"],
-                row["ingredient_qty"],
-                row["premium_charge"],
-            )
-            for row in menu_item_ingredient_rows
         ],
     )
 
@@ -331,7 +380,7 @@ def build_sql_script(order_count=10):
 
 
 def main():
-    order_count = 10
+    order_count = int(input("how many orders to generate? "))
     script = build_sql_script(order_count=order_count)
     output_path = Path(__file__).with_name("generated_data.sql")
     output_path.write_text(script, encoding="utf-8")
