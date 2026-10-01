@@ -165,6 +165,8 @@ MENU_ITEMS: (menu_item_id, menu_item_name, menu_price)
 INGREDIENTS: (ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, measurement_units)
 This makes the script easier to follow without needing to infer each field from the list order.
 
+If you want, I can also add a short comment explaining the meaning of the MENU_INGREDIENT_MAP entries and the generated SQL columns.
+
 - Fix the logic error in this function
   the generate_order_details function is currently assigning a single random item to each order, but the function is intended to generate details for each item in the order. As written, the loop only creates one order_detail row per order and doesn’t properly track the total across multiple items. I’d change it to iterate through a selected set of menu items for each order, add one row per item with its quantity, and update order_total by summing the price of each selected item. This will ensure the order_details table reflects the actual content of each order and keeps totals consistent.
 - Repeat the script append for each menu item.
