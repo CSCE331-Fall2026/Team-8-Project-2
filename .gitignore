@@ -2,6 +2,8 @@
 
 generated_data.sql
 
+db_scripts.txt
+
 # Compiled class file
 *.class
 
