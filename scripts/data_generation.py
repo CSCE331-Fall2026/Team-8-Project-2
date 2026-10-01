@@ -8,8 +8,6 @@ menu_item_ingredients_id = 0
 ingredients_id = 0
 
 
-for i in range(365):
-    print("yay")
 
 def generate_sorted_timestamps(start_date, end_date, count):
     start = int(start_date.timestamp())
