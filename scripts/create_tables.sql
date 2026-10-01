@@ -1,5 +1,3 @@
-/* From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/create_tables.sql */
-
 CREATE TYPE order_status AS ENUM ('paid', 'canceled', 'refunded');
 CREATE TYPE payment_method AS ENUM ('credit_card', 'debit_card', 'cash', 'gift_card', 'meal_pass');
 CREATE TYPE storage_type AS ENUM ('freezer', 'refrigerator', 'pantry');

@@ -1,4 +1,4 @@
-/* From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/validation.sql */
+/* From root project directory: psql -h csce-315-db.engr.tamu.edu -p 5432 -U teamX -d teamXdb -f ./scripts/validation.sql */
 
 -- Q1: 52 Weeks of sales data
 

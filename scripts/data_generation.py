@@ -1,11 +1,3 @@
-''' 
-From root project directory: 
-
-python3 ./scripts/data_generation.py
-psql -h csce-315-db.engr.tamu.edu -p 5432 -U team8 -d team8db -f ./scripts/generated_data.sql
-
-'''
-
 import random
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -79,18 +71,18 @@ INGREDIENTS = [
 ]
 
 MENU_INGREDIENT_MAP = {
-    "The Original Orange Chicken": ["Chicken", "Rice", "Broccoli", "Carrots", "Orange Sauce"],
-    "Honey Walnut Shrimp (Premium)": ["Shrimp", "Walnuts", "Honey", "Rice", "Broccoli"],
-    "Beijing Beef": ["Beef", "Bell Pepper", "Onion", "Rice", "Soy Sauce"],
-    "Broccoli Beef": ["Beef", "Broccoli", "Onion", "Rice", "Soy Sauce"],
-    "Grilled Teriyaki Chicken": ["Chicken", "Rice", "Broccoli", "Carrots", "Teriyaki Sauce"],
-    "Kung Pao Chicken": ["Chicken", "Bell Pepper", "Onion", "Rice", "Soy Sauce"],
-    "Honey Sesame Chicken Breast": ["Chicken", "Rice", "Broccoli", "Honey", "Sesame Seeds"],
-    "Black Pepper Chicken": ["Chicken", "Bell Pepper", "Onion", "Rice", "Black Pepper"],
-    "Mushroom Chicken": ["Chicken", "Mushrooms", "Onion", "Rice", "Broccoli"],
-    "String Bean Chicken Breast": ["Chicken", "Green Beans", "Onion", "Rice", "Soy Sauce"],
+    "The Original Orange Chicken": ["Chicken", "Broccoli", "Carrots", "Orange Sauce"],
+    "Honey Walnut Shrimp (Premium)": ["Shrimp", "Walnuts", "Honey", "Broccoli"],
+    "Beijing Beef": ["Beef", "Bell Pepper", "Onion", "Soy Sauce"],
+    "Broccoli Beef": ["Beef", "Broccoli", "Onion", "Soy Sauce"],
+    "Grilled Teriyaki Chicken": ["Chicken", "Broccoli", "Carrots", "Teriyaki Sauce"],
+    "Kung Pao Chicken": ["Chicken", "Bell Pepper", "Onion", "Soy Sauce"],
+    "Honey Sesame Chicken Breast": ["Chicken", "Broccoli", "Honey", "Sesame Seeds"],
+    "Black Pepper Chicken": ["Chicken", "Bell Pepper", "Onion", "Black Pepper"],
+    "Mushroom Chicken": ["Chicken", "Mushrooms", "Onion", "Broccoli"],
+    "String Bean Chicken Breast": ["Chicken", "Green Beans", "Onion", "Soy Sauce"],
     "SweetFire Chicken Breast": ["Chicken", "Bell Pepper", "Pineapple", "Onion", "Sweet Chili Sauce"],
-    "Black Pepper Sirloin Steak (Premium)": ["Beef", "Bell Pepper", "Onion", "Rice", "Black Pepper"],
+    "Black Pepper Sirloin Steak (Premium)": ["Beef", "Bell Pepper", "Onion", "Black Pepper"],
     "Chow Mein": ["Chow Mein Noodles", "Cabbage", "Carrots", "Onion", "Soy Sauce"],
     "Fried Rice": ["Rice", "Egg", "Carrots", "Onion", "Soy Sauce"],
     "Super Greens": ["Broccoli", "Green Beans", "Carrots", "Mushrooms", "Rice"],
