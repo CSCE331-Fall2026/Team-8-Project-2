@@ -140,6 +140,18 @@ While attempting to create test data, the group realized there was a missing ste
 
   - Renamed MenuItemIngredients to MenuItemDetails to keep naming conventions consistent
 
+## Style Guide
+
+### Python
+
+- Snake case and capitalized global variables
+- Key value pairs on separate lines when block defined
+
+### SQL
+
+- All lower case and snake case for fields and entity names
+- Line break, indentation, and trailing comma for select statements with > 2 values
+
 ## AI Usage
 
 - Used to populate the the map of the menu items, ingredients, with numbers.
