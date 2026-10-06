@@ -12,16 +12,7 @@ Backend
 
 PM
 
-Will Wrote stuff here
-
 - Brandon
-
-# Lab Day 9/24
-
-Arnav Karekar Lab Merge - another change
-Brandon banch merge :D
-
-Tyler's branch merge
 
 # Database Schema and Design
 
@@ -85,7 +76,7 @@ For the manager, this will allow them to track what items on the menu are perfor
 
 For the cashier, this entity exists to be able to ring up an order with multiple different ingredients within it through the use of the MenuItemIngredients join table.
 
-## MenuItemIngredients
+## MenuItemDetails
 
 - menu_item_ingredient_id: Tracks the action of an ingredient being placed inside of a menu item. For example the orange chicken going into a bowl.
 - menu_item_id (FK): Tracks the individual menu item that an ingredient is becoming a part of. In the previous example this would be the bowl the chicken is going into.
@@ -108,37 +99,6 @@ This is another join table that bridges the many-to-many relation of many menu i
 For the manager, knowing the quantity in stock, as well as the storage type of any given item can help in managing an item. The system can also allow for the manager to be notified of products that need to be restocked.
 
 For the cashier, the ingredients need to be accessed in order to add them into a menu item via the join table.
-
-## Changelog
-
-### Changes in response to TA feedback from 9/22 Lab
-
-- add order_total to Orders entity: Minimizes query overhead by tracking total cost of an entire order in top level entity. Note that this only allows for whole order refunds in response to assignment scope from TA.
-
-- add order_qty to OrderDetails entity: Reduces entity creation overhead by allowing for duplicate MenuItems to be contained in one entity. Also aids in cashier experience by allowing quantity to be a field in the UI to speed up the ordering process of duplicate items contained in the same order.
-
-- add premium_charge to MenuItemIngredients: Allows for premium menu items to have an upcharge added to the base cost of a MenuItem such as a bowl.
-
-- add measurement_units to Ingredients: Allows for greater clarity for how an item's stock is tracked.
-
-- adjusted names of fields to tie them closer to their entity.
-  - MenuItemIngredients: quantity -> ingredient_quantity
-  - Orders: status -> order_status
-
-### Changes in response to Database Population
-
-While attempting to create test data, the group realized there was a missing step between orders and ingredients. MenuItems was too ambiguous and did not facilitate the creation of combo items like bowls and plates (what you actually pay for as a customer) and the creation of the entrees from individual ingredients like orange chicken.
-
-- add 2 new tables: Combos and ComboDetails
-  - Combos bridges the functional gap we saw in our previous schema and we now have 2 separate entities to track what a customer asks for and the recipes made by the employees.
-  - ComboDetails is the join table that allows for the many-to-many relation to exist between Combos and MenuItems so that every permutation of combo does not need to be individually defined.
-
-  - Combos:
-    - combo_id (PK), combo_name, combo_price
-  - ComboDetails:
-    - combo_detail_id (PK), menu_item_id (FK), combo_id (FK), servings
-
-  - Renamed MenuItemIngredients to MenuItemDetails to keep naming conventions consistent
 
 ## Style Guide
 
