@@ -1,6 +1,8 @@
 # Changelog
 
-## Changes in response to TA feedback from 9/22 Lab
+## Database Changelog
+
+### Changes in response to TA feedback from 9/22 Lab
 
 - add order_total to Orders entity: Minimizes query overhead by tracking total cost of an entire order in top level entity. Note that this only allows for whole order refunds in response to assignment scope from TA.
 
@@ -14,7 +16,7 @@
   - MenuItemIngredients: quantity -> ingredient_quantity
   - Orders: status -> order_status
 
-## Changes in response to Database Population
+### Changes in response to Database Population
 
 While attempting to create test data, the group realized there was a missing step between orders and ingredients. MenuItems was too ambiguous and did not facilitate the creation of combo items like bowls and plates (what you actually pay for as a customer) and the creation of the entrees from individual ingredients like orange chicken.
 
@@ -28,3 +30,11 @@ While attempting to create test data, the group realized there was a missing ste
     - combo_detail_id (PK), menu_item_id (FK), combo_id (FK), servings
 
   - Renamed MenuItemIngredients to MenuItemDetails to keep naming conventions consistent
+
+### Changes in Response to GUI Implementation
+
+Combos table was moved to not be an inbetween step of the chain of OrderDetails -> X(Combos) -> ComboDetails. This change allows for ComboDetails to track the individual MenuItems without tying them to fixed Combo types.
+
+menu_price was dropped as a field from MenuItems because price is dependent on the combo type and a premium charge, not the individual item.
+
+Primary keys for id numbers of relevant fields are also now set to auto increment when they are created.

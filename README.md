@@ -74,6 +74,18 @@ For the manager, this is meant to keep track of the items sold through the day, 
 
 For the cashier, this is meant to help them keep track of each item, when it was bought, what was in the order, and similar things.
 
+## Combos
+
+- combo_id: Tracks an individual combo that is on the menu
+- combo_name: Hardcoded names of potential order types
+- combo_price: How much this combo variation costs
+
+This table holds the fixed info for combos.
+
+This table is the first thing an employee interacts with when ringing up an order for a customer.
+
+The manager will be able to track what types of orders people are most commonly making.
+
 ## OrderDetails
 
 - order_detail_id: Tracks an individual product contained in a larger order.
@@ -81,39 +93,30 @@ For the cashier, this is meant to help them keep track of each item, when it was
 - order_id (FK): To keep track of the order to which the order details entity belongs to.
 - order_qty: Tracks how many of a specific MenuItem are in an Order
 
-In order to facilitate the many-to-many relation between many orders containing many combo items, this join table exists to allow for orders to contain multiple different items from the menu.
+When placing an order at the register, if 2 bowls are ordered they will belong to order #x. OrderDetails allows for all of the bowls (or other combos) that are added to an order to be tracked individually. If the bowls are identical, the quantity can be changed.
 
 For the cashier, tracking the order quantity allows for the count of a specific menu item to simply be duplicated instead of requiring the same order to be rung up twice. This will help to reduce the time a customer spends at a register.
 
-## Combos
-
-- combo_id: Tracks an individual combo being ordered
-- combo_name: Hardcoded names of potential order types
-- combo_price: How much this combo variation costs
-
-This table is the first thing an employee interacts with when ringing up an order for a customer.
-
-The manager will be able to track what types of orders people are most commonly making.
-
 ## ComboDetails
 
-- combo_detail_id: Tracks an individual item being added to a combo
+- combo_detail_id: Tracks an individual item being added to an OrderDetail entity
 - menu_item_id: Tracks which entree/side is being added to a given combo
-- combo_id: Tracks which combo a menu item is being assigned to
+- order_detail_id: Tracks which order detail a menu item is being assigned to
 - servings: How much of a menu item is being added in this detail
 
-This table allows for a many-to-many relation to exist between combos and menu items. Because it exists, a cashier will not have to scroll down a large list looking for the exact order permuation that the customer asks for.
+This table will hold the menu items that are inside a given combo. Because it exists, a cashier will not have to scroll down a large list looking for the exact order permuation that the customer asks for.
 
 ## MenuItem
 
 - menu_item_id: To keep track of each menu item uniquely such as bowls, plates, and combos.
 - menu_item_name: To keep track of the menu item name.
 - premium_charge: For applicable items, adds a flat charge on top of the base price. This column will be used more on the business logic of calculating order price.
-- menu_price: The cost of the item the customer needs to pay if it is purchased a la carte.
 
-For the manager, this will allow them to track what items on the menu are performing well and are the most popular. In addition, it will allow for them to calculate the profit for each item by comparing the menu_price to the sum of the ingredient costs for the menu item.
+This table holds the names and ids of full items that can be on a menu like orange chicken. It also tracks if it has a premium charge.
 
-For the cashier, this entity exists to be able to ring up an order with multiple different ingredients within it through the use of the MenuItemIngredients join table.
+For the manager, this will allow them to track what items on the menu are performing well and are the most popular.
+
+For the cashier, this entity exists to be able to ring up an order with multiple different ingredients within it through the use of the MenuItemDetails join table.
 
 ## MenuItemDetails
 

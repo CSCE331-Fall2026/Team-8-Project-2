@@ -28,8 +28,7 @@ CREATE TABLE combos (
 CREATE TABLE menu_items (
     menu_item_id INT PRIMARY KEY,
     menu_item_name VARCHAR(50),
-    premium_charge FLOAT DEFAULT 0.0,
-    menu_price FLOAT DEFAULT 0.0
+    premium_charge FLOAT DEFAULT 0.0
 );
 
 CREATE TABLE ingredients (
@@ -53,7 +52,7 @@ CREATE TABLE order_details (
 CREATE TABLE combo_details (
     combo_detail_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     menu_item_id INT REFERENCES menu_items(menu_item_id),
-    combo_id INT REFERENCES combos(combo_id),
+    order_detail_id INT REFERENCES order_details(order_detail_id),
     servings FLOAT
 );
 
