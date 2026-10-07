@@ -110,11 +110,11 @@ COMBOS = [
     (1, "Bowl", 8.99),
     (2, "Plate", 10.99),
     (3, "Bigger Plate", 12.99),
-    (4, "A la carte", 24.99),
-    (5, "Drink", 24.99),
-    (6, "Bowl Combo", 24.99),
-    (7, "Plate Combo", 24.99),
-    (8, "Bigger Plate Combo", 0.00)
+    (4, "A la carte", 4.99),
+    (5, "Drink", 2.99),
+    (6, "Bowl Combo", 10.99),
+    (7, "Plate Combo", 12.99),
+    (8, "Bigger Plate Combo", 14.99)
 ] 
 
 # Categorizing items

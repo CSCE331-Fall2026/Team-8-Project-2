@@ -56,8 +56,8 @@ Linux / macOS
 
 ```bash
 cd src
-javac --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml *.java
-java --enable-native-access=javafx.graphics --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml -cp ".:../postgresql-42.2.8.jar" GUIApp
+javac --module-path ../javafx-sdk-27/lib --add-modules javafx.controls,javafx.fxml -cp ".:postgresql-42.2.8.jar" *.java
+java --enable-native-access=javafx.graphics --module-path ../javafx-sdk-27/lib --add-modules  javafx.controls,javafx.fxml -cp ".:postgresql-42.2.8.jar" GUIApp
 ```
 
 Windows
