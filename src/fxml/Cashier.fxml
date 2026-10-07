@@ -21,10 +21,12 @@
             <HBox spacing="10.0">
                <children>
                   <Label text="Cart" />
+                  <Button fx:id="removeCartItemButton" onAction="#removeSelectedCartItem" text="Remove" />
                   <Button onAction="#clearCart" text="Clear" />
                </children>
             </HBox>
             <ListView fx:id="cartList" VBox.vgrow="ALWAYS" />
+            <Label fx:id="cartTotalLabel" text="Total: $0.00" />
             <Button maxWidth="Infinity" onAction="#doneOrder" text="Done" />
          </children>
       </VBox>
