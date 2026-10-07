@@ -7,7 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.control.Spinner;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.sql.*;
 import javafx.scene.control.TextArea;
@@ -25,6 +26,7 @@ public class CashierController {
   @FXML private Label buildSummaryLabel;
   @FXML private VBox itemRows;
   @FXML private Button addToCartButton;
+  @FXML private Spinner<Integer> orderQtySpinner;
 
   private record CartLine(ComboType type, List<MenuCatalog.MenuItem> items, String comboName, float price) {}
 
@@ -168,7 +170,9 @@ public class CashierController {
       return;
     }
 
-    cartItems.add(new CartLine(build.type(), build.items(), build.cartLine(), 0f));
+    for (int i = 0; i < orderQtySpinner.getValue(); i++) {
+      cartItems.add(new CartLine(build.type(), build.items(), build.cartLine(), 0f));
+    }
     refreshCart();
     hideBuild();
   }
@@ -198,6 +202,7 @@ public class CashierController {
   private void beginBuild(ComboType type) {
     build = new BuildState(type);
     buildTitleLabel.setText(type.displayName());
+    orderQtySpinner.getValueFactory().setValue(1);
     rebuildItemButtons();
     refreshBuildState();
     setBuildVisible(true);
@@ -225,18 +230,25 @@ public class CashierController {
       Label heading = new Label(MenuCatalog.label(category) + ":");
       heading.setStyle("-fx-font-weight: bold;");
 
-      FlowPane buttons = new FlowPane(10, 10);
+      itemRows.getChildren().add(heading);
       for (MenuCatalog.MenuItem item : MenuCatalog.items(category)) {
-        Button button = new Button(item.name());
-        button.setOnAction(e -> {
-          build.toggle(item);
+        Label name = new Label(item.name());
+        name.setPrefWidth(200);
+        Label count = new Label("0");
+        Button plus = new Button("+");
+        Button minus = new Button("-");
+        plus.setOnAction(e -> {
+          build.add(item);
+          count.setText(String.valueOf(build.countOf(item)));
           refreshBuildState();
         });
-        buttons.getChildren().add(button);
+        minus.setOnAction(e -> {
+          build.remove(item);
+          count.setText(String.valueOf(build.countOf(item)));
+          refreshBuildState();
+        });
+        itemRows.getChildren().add(new HBox(10, name, count, plus, minus));
       }
-
-      VBox row = new VBox(5, heading, buttons);
-      itemRows.getChildren().add(row);
     }
   }
 
