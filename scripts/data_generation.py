@@ -105,6 +105,7 @@ PREMIUM_CHARGES = {
     "Black Pepper Sirloin Steak (Premium)": 2.50,
 }
 
+# Combo options for the code to pick from
 COMBOS = [
     (1, "Bowl", 8.99),
     (2, "Plate", 10.99),
@@ -116,11 +117,13 @@ COMBOS = [
     (8, "Bigger Plate Combo", 0.00)
 ] 
 
+# Categorizing items
 ENTREES = list(range(1, 13))
 SIDES   = [13, 14, 15, 16, 17]
 APPS    = [18, 19, 20, 21, 22]
 DRINKS  = [23]
 
+# Categorizing what each combo has
 COMBO_ELIGIBLE = {
     "Bowl":        ENTREES + SIDES,
     "Plate":       ENTREES + SIDES,
