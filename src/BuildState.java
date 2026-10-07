@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +17,18 @@ public final class BuildState {
     return type;
   }
 
-  public void toggle(MenuCatalog.MenuItem item) {
-    if (selected.contains(item)) {
-      selected.remove(item);
-      return;
+  public void add(MenuCatalog.MenuItem item) {
+    if (canAdd(item)) {
+      selected.add(item);
     }
-    if (!canAdd(item)) {
-      return;
-    }
-    selected.add(item);
+  }
+
+  public void remove(MenuCatalog.MenuItem item) {
+    selected.remove(item);
+  }
+
+  public int countOf(MenuCatalog.MenuItem item) {
+    return Collections.frequency(selected, item);
   }
 
   public boolean isComplete() {

@@ -6,7 +6,7 @@ random.seed(42)
 PEAK_DAYS = [datetime(2024, 10, 4), datetime(2025, 11, 26)]
 PEAK_COPIES = 2
 
-# menu_item_id, menu_item_name, menu_price
+# menu_item_id, menu_item_name, premium_charge
 MENU_ITEMS = [
     (1, "The Original Orange Chicken", 7.45),
     (2, "Honey Walnut Shrimp (Premium)", 8.40),
@@ -127,9 +127,12 @@ DRINKS  = [23]
 COMBO_ELIGIBLE = {
     "Bowl":        ENTREES + SIDES,
     "Plate":       ENTREES + SIDES,
-    "Big Plate":   ENTREES + SIDES,
-    "Family Meal": ENTREES + SIDES,
+    "Bigger Plate": ENTREES + SIDES,
     "A la carte":  ENTREES + SIDES + APPS + DRINKS,
+    "Drink":       DRINKS,
+    "Bowl Combo":  ENTREES + SIDES,
+    "Plate Combo": ENTREES + SIDES,
+    "Bigger Plate Combo": ENTREES + SIDES,
 }
 
 
@@ -170,7 +173,6 @@ def generate_menu_items():
             "menu_item_id": item_id,
             "menu_item_name": name,
             "premium_charge": PREMIUM_CHARGES.get(name, 0.0),
-            "menu_price": round(price, 2),
         }
         for item_id, name, price in MENU_ITEMS
     ]
@@ -197,7 +199,7 @@ def build_ingredient_rows():
     return ingredient_rows
 
 
-def generate_menu_item_details_rows(menu_items, ingredients):
+def generate_menu_item_details_rows(menu_items):
     ingredient_lookup = {item[1]: item[0] for item in INGREDIENTS}
     rows = []
     menu_item_detail_id = 1
@@ -231,7 +233,6 @@ def generate_combos():
 def generate_combo_details(menu_items, combos):
     rows = []
     combo_detail_id = 1
-    menu_item_ids = [item["menu_item_id"] for item in menu_items]
 
     for combo in combos:
         for menu_item_id in COMBO_ELIGIBLE[combo["combo_name"]]:
@@ -315,14 +316,14 @@ def build_sql_script(order_count=10):
     orders = generate_orders(order_count)
     combo_detail_rows = generate_combo_details(menu_items, combos)
     order_detail_rows = generate_order_details(orders, combos)
-    menu_item_details_rows = generate_menu_item_details_rows(menu_items, ingredient_rows)
+    menu_item_details_rows = generate_menu_item_details_rows(menu_items)
 
     sql_script = ""
     sql_script += build_insert_sql(
         "menu_items",
-        ["menu_item_id", "menu_item_name", "premium_charge", "menu_price"],
+        ["menu_item_id", "menu_item_name", "premium_charge"],
         [
-            (row["menu_item_id"], row["menu_item_name"], row["premium_charge"], row["menu_price"])
+            (row["menu_item_id"], row["menu_item_name"], row["premium_charge"])
             for row in menu_items
         ],
     )
