@@ -1,6 +1,6 @@
 import java.util.List;
 
-/** Hardcoded menu items from seed data (sides / entrees / drinks). */
+/** @author Team 8 */
 public final class MenuCatalog {
 
   public enum Category {
@@ -37,18 +37,25 @@ public final class MenuCatalog {
 
   private MenuCatalog() {}
 
+  /** @return the side items */
   public static List<MenuItem> sides() {
     return SIDES;
   }
 
+  /** @return the entree items */
   public static List<MenuItem> entrees() {
     return ENTREES;
   }
 
+  /** @return the drink items */
   public static List<MenuItem> drinks() {
     return DRINKS;
   }
 
+  /**
+   * @param category the menu category
+   * @return the items in the category
+   */
   public static List<MenuItem> items(Category category) {
     return switch (category) {
       case SIDE -> SIDES;
@@ -57,6 +64,10 @@ public final class MenuCatalog {
     };
   }
 
+  /**
+   * @param category the menu category
+   * @return the category display label
+   */
   public static String label(Category category) {
     return switch (category) {
       case SIDE -> "Sides";
