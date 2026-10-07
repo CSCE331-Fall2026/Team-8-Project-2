@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -79,6 +80,8 @@
                   <HBox spacing="10.0">
                      <children>
                         <Button onAction="#cancelBuild" text="Cancel" />
+                        <Label text="Qty" />
+                        <Spinner fx:id="orderQtySpinner" min="1" max="20" initialValue="1" prefWidth="70.0" />
                         <Button fx:id="addToCartButton" onAction="#addToCart" text="Add to cart" />
                      </children>
                   </HBox>
