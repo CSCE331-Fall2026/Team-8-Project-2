@@ -20,19 +20,19 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE combos (
-    combo_id INT PRIMARY KEY,
+    combo_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     combo_name combo_type,
     combo_price FLOAT DEFAULT 0.0
 );
 
 CREATE TABLE menu_items (
-    menu_item_id INT PRIMARY KEY,
+    menu_item_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     menu_item_name VARCHAR(50),
     premium_charge FLOAT DEFAULT 0.0
 );
 
 CREATE TABLE ingredients (
-    ingredient_id INT PRIMARY KEY,
+    ingredient_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     ingredient_name VARCHAR(50),
     quantity_in_stock FLOAT,
     storage_type storage_type,
