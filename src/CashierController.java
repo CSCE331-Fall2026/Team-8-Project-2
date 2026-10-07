@@ -69,7 +69,6 @@ public class CashierController {
     }
 
     try {
-
       // SQL statement object that will be used to execute db inserts
       Statement stmt = conn.createStatement();
 
@@ -82,41 +81,51 @@ public class CashierController {
       int orderId = result.getInt("order_id");
       result.close();
 
-      // Create a row for each combo in the order
+      // Create a row for each combo in the order in order details
       for (CartLine line : cartItems) {
-        String createComboDetailStatement =
-          "INSERT INTO order_details (order_id, combo_id) " +
+        String createOrderDetailStatement =
+          "INSERT INTO order_details (order_id, combo_id, order_qty) " +
           "VALUES " +
-          "(" + orderId + ", " + line.comboId + ")";
-        stmt.executeUpdate(createComboDetailStatement);
+          "(" + orderId + ", " + line.type().comboId() + ", 1) " + // currently hardcoded as 1 - update once cartItems holds quantity
+          "RETURNING order_detail_id"; 
+        ResultSet orderDetailResult = stmt.executeQuery(createOrderDetailStatement);
+        orderDetailResult.next();
+        int orderDetailId = orderDetailResult.getInt("order_detail_id");
+        orderDetailResult.close();
+
+        for (MenuCatalog.MenuItem item : line.items()) {
+          String createComboDetailStatement = 
+            "INSERT INTO combo_details (order_detail_id, menu_item_id, servings) " +
+            "VALUES " +
+            "(" + orderDetailId + ", " + item.id() + ", 1)";
+          stmt.executeUpdate(createComboDetailStatement);
+        }
       }
 
       // With order created and combos tracked, write order total
-      // Calculates premium charge per combo then sums the combos to get order total
+      // First subquery calculates base combo cost * quantity
+      // Second calculates premium charge for the combo
+      // Results are added together as order_total
       String writeOrderTotalStatement = 
-        "UPDATE orders SET order_total = t.total " +
-        "FROM (" +
-        "SELECT od.order_id, SUM(c.combo_price + pc.premium) AS total " +
+        "UPDATE orders SET order_total = " +
+        "(SELECT SUM(c.combo_price * od.order_qty) " +
         "FROM order_details AS od " +
         "JOIN combos AS c ON c.combo_id = od.combo_id " + 
-        "JOIN (" + 
-        "SELECT cd.combo_id, SUM(mi.premium_charge) AS premium " +
-        "FROM combo_details AS cd " +
+        "WHERE od.order_id = " + orderId + ") " +
+        "+ (SELECT SUM(mi.premium_charge * od.order_qty) " +
+        "FROM order_details AS od " +
+        "JOIN combo_details AS cd ON cd.order_detail_id = od.order_detail_id " +
         "JOIN menu_items AS mi ON mi.menu_item_id = cd.menu_item_id " +
-        "GROUP BY cd.combo_id " + 
-        ") AS pc ON pc.combo_id = c.combo_id " +
-        "WHERE od.order_id = " + orderId + " " +
-        "GROUP BY od.order_id " + 
-        ") AS t " +
-        "WHERE orders.order_id = t.order_id";
+        "WHERE od.order_id = " + orderId + ") " +
+        "WHERE order_id = " + orderId;
       stmt.executeUpdate(writeOrderTotalStatement);
 
       // Update ingredient stock
       String updateIngredientsStatement = 
         "UPDATE ingredients AS i SET quantity_in_stock = i.quantity_in_stock - u.used " +
-        "FROM (SELECT mid.ingredient_id, SUM(mid.ingredient_quantity) AS used " +
+        "FROM (SELECT mid.ingredient_id, SUM(mid.ingredient_quantity * cd.servings * od.order_qty) AS used " +
         "FROM order_details AS od " + 
-        "JOIN combo_details AS cd ON cd.combo_id = od.combo_id " +
+        "JOIN combo_details AS cd ON cd.order_detail_id = od.order_detail_id " +
         "JOIN menu_item_details AS mid ON mid.menu_item_id = cd.menu_item_id " +
         "WHERE od.order_id = " + orderId + " " +
         "GROUP BY mid.ingredient_id) AS u " +
@@ -132,7 +141,13 @@ public class CashierController {
       return;
     }
     finally {
-      conn.close();
+      try {
+        conn.close();
+      }
+      catch (SQLException e) {
+        e.printStackTrace();
+      }
+      
     }
   }
 
@@ -196,8 +211,6 @@ public class CashierController {
     addToCartButton.setDisable(!build.isComplete());
   }
 
-
-  
   // database connection   
   private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; //database location
   private Connection connectDb() {
