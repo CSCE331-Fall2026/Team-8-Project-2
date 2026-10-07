@@ -60,6 +60,10 @@ public final class BuildState {
     return categories;
   }
 
+  public List<MenuCatalog.MenuItem> items() {
+    return List.copyOf(selected);
+  }
+
   private boolean canAdd(MenuCatalog.MenuItem item) {
     if (type.isALaCarte()) {
       return selected.isEmpty() && item.category() != MenuCatalog.Category.DRINK;
