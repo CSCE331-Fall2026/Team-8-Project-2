@@ -55,6 +55,10 @@ Then open **Cashier** from the home screen to build bowls/plates into the cart.
 
 More detail: [`src/README.md`](src/README.md).
 
+# Lab Day 9/24
+
+Arnav Karekar Lab Merge - second change
+
 # Database Schema and Design
 
 No AI was used to critique our database.
