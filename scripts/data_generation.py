@@ -230,17 +230,20 @@ def generate_combos():
     ]
 
 
-def generate_combo_details(menu_items, combos):
+def generate_combo_details(order_details, combos):
     rows = []
     combo_detail_id = 1
 
-    for combo in combos:
-        for menu_item_id in COMBO_ELIGIBLE[combo["combo_name"]]:
+    combo_lookup = {combo["combo_id"]: combo["combo_name"] for combo in combos}
+
+    for order_detail in order_details:
+        combo_name = combo_lookup[order_detail["combo_id"]]
+        for menu_item_id in COMBO_ELIGIBLE[combo_name]:
             rows.append(
                 {
                     "combo_detail_id": combo_detail_id,
                     "menu_item_id": menu_item_id,
-                    "combo_id": combo["combo_id"],
+                    "order_detail_id": order_detail["order_detail_id"],
                     "servings": round(random.uniform(0.5, 2.0), 2),
                 }
             )
@@ -314,9 +317,9 @@ def build_sql_script(order_count=10):
     ingredient_rows = build_ingredient_rows()
     combos = generate_combos()
     orders = generate_orders(order_count)
-    combo_detail_rows = generate_combo_details(menu_items, combos)
-    order_detail_rows = generate_order_details(orders, combos)
     menu_item_details_rows = generate_menu_item_details_rows(menu_items)
+    order_detail_rows = generate_order_details(orders, combos)
+    combo_detail_rows = generate_combo_details(order_detail_rows, combos)
 
     sql_script = ""
     sql_script += build_insert_sql(
@@ -366,14 +369,6 @@ def build_sql_script(order_count=10):
         ],
     )
     sql_script += build_insert_sql(
-        "combo_details",
-        ["combo_detail_id", "menu_item_id", "combo_id", "servings"],
-        [
-            (row["combo_detail_id"], row["menu_item_id"], row["combo_id"], row["servings"])
-            for row in combo_detail_rows
-        ],
-    )
-    sql_script += build_insert_sql(
         "orders",
         ["order_id", "order_status", "created_at", "updated_at", "payment_method", "order_total"],
         [
@@ -394,6 +389,19 @@ def build_sql_script(order_count=10):
         [
             (row["order_detail_id"], row["combo_id"], row["order_id"], row["order_qty"])
             for row in order_detail_rows
+        ],
+    )
+    sql_script += build_insert_sql(
+        "combo_details",
+        ["combo_detail_id", "menu_item_id", "order_detail_id", "servings"],
+        [
+            (
+                row["combo_detail_id"],
+                row["menu_item_id"],
+                row["order_detail_id"],
+                row["servings"],
+            )
+            for row in combo_detail_rows
         ],
     )
 
