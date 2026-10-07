@@ -38,3 +38,5 @@ Combos table was moved to not be an inbetween step of the chain of OrderDetails 
 menu_price was dropped as a field from MenuItems because price is dependent on the combo type and a premium charge, not the individual item.
 
 Primary keys for id numbers are also now set to auto increment when they are created to simplify additions to database and data generation as a whole.
+
+Add active field for MenuItems to track if the item has been discontinued or not without fully deleting the menu item.

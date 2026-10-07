@@ -123,6 +123,7 @@ This table will hold the menu items that are inside a given combo. Because it ex
 - menu_item_id: To keep track of each menu item uniquely such as bowls, plates, and combos.
 - menu_item_name: To keep track of the menu item name.
 - premium_charge: For applicable items, adds a flat charge on top of the base price. This column will be used more on the business logic of calculating order price.
+- active: Tracks if the item is discontinued or active. Having this field avoids deletions to keep order history intact.
 
 This table holds the names and ids of full items that can be on a menu like orange chicken. It also tracks if it has a premium charge.
 
