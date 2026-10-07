@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.FlowPane;
@@ -16,6 +17,7 @@ public class CashierController {
 
   @FXML private ListView<CartLine> cartList;
   @FXML private Button removeCartItemButton;
+  @FXML private Label cartTotalLabel;
   @FXML private Separator buildSeparator;
   @FXML private VBox buildPane;
   @FXML private Label buildTitleLabel;
@@ -24,12 +26,7 @@ public class CashierController {
   @FXML private VBox itemRows;
   @FXML private Button addToCartButton;
 
-  private record CartLine(ComboType type, List<MenuCatalog.MenuItem> items, String comboName) {
-    @Override
-    public String toString() {
-      return comboName;
-    }
-  }
+  private record CartLine(ComboType type, List<MenuCatalog.MenuItem> items, String comboName, float price) {}
 
   private final ObservableList<CartLine> cartItems = FXCollections.observableArrayList();
   private BuildState build;
@@ -37,9 +34,21 @@ public class CashierController {
   @FXML
   private void initialize() {
     cartList.setItems(cartItems);
+    cartList.setCellFactory(list -> new ListCell<>() {
+      @Override
+      protected void updateItem(CartLine item, boolean empty) {
+        super.updateItem(item, empty);
+        if (empty || item == null) {
+          setText(null);
+        } else {
+          setText("$" + String.format("%.2f", item.price()) + " - " + item.comboName());
+        }
+      }
+    });
     removeCartItemButton.setDisable(true);
     cartList.getSelectionModel().selectedItemProperty().addListener(
         (obs, oldVal, newVal) -> removeCartItemButton.setDisable(newVal == null));
+    refreshCart();
     hideBuild();
   }
 
@@ -59,12 +68,14 @@ public class CashierController {
     int index = cartList.getSelectionModel().getSelectedIndex();
     if (index >= 0) {
       cartItems.remove(index);
+      refreshCart();
     }
   }
 
   @FXML
   private void clearCart() {
     cartItems.clear();
+    refreshCart();
   }
 
   @FXML
@@ -97,7 +108,7 @@ public class CashierController {
         String createComboDetailStatement =
           "INSERT INTO order_details (order_id, combo_id) " +
           "VALUES " +
-          "(" + orderId + ", " + line.comboId + ")";
+          "(" + orderId + ", " + line.type().comboId() + ")";
         stmt.executeUpdate(createComboDetailStatement);
       }
 
@@ -135,6 +146,7 @@ public class CashierController {
 
       stmt.close();
       cartItems.clear();
+      refreshCart();
       hideBuild();
     }
     catch (Exception e) {
@@ -142,7 +154,11 @@ public class CashierController {
       return;
     }
     finally {
-      conn.close();
+      try {
+        conn.close();
+      } catch (Exception e) {
+        System.out.println("Error closing database connection:\n" + e.getMessage());
+      }
     }
   }
 
@@ -151,8 +167,19 @@ public class CashierController {
     if (build == null || !build.isComplete()) {
       return;
     }
-    cartItems.add(new CartLine(build.type(), build.items(), build.cartLine()));
+
+    float price = 0f;
+    cartItems.add(new CartLine(build.type(), build.items(), build.cartLine(), price));
+    refreshCart();
     hideBuild();
+  }
+
+  private void refreshCart() {
+    float total = 0f;
+    for (CartLine line : cartItems) {
+      total += line.price();
+    }
+    cartTotalLabel.setText("Total: $" + String.format("%.2f", total));
   }
 
   private void beginBuild(ComboType type) {
