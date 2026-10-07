@@ -1,11 +1,12 @@
-Assumes javafx sdk is in parent directory
-For Mac, replace ; with :
+Assumes javafx sdk is in parent directory.
+For Mac/Linux, replace `;` with `:` in classpath examples elsewhere.
+FXML layouts live in `fxml/`.
 
-Compile:
+Compile (from this directory):
 
-> javac --module-path ../javafx-sdk-25/lib/ --add-modules javafx.controls,javafx.fxml GUIApp.java
+> javac --module-path ../javafx-sdk-25/lib/ --add-modules javafx.controls,javafx.fxml *.java
 > OR (check SDK version)
-> javac --module-path ../javafx-sdk-27/lib/ --add-modules javafx.controls,javafx.fxml GUIApp.java
+> javac --module-path ../javafx-sdk-27/lib/ --add-modules javafx.controls,javafx.fxml *.java
 
 Run:
 

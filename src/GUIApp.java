@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 public class GUIApp extends Application {
   @Override
   public void start(Stage stage) throws Exception {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GUI.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GUI.fxml"));
     Scene scene = new Scene(fxmlLoader.load(), 800, 500);
     stage.setTitle("Team 8 Project");
     stage.setScene(scene);
