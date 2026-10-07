@@ -15,6 +15,7 @@ import java.util.List;
 public class CashierController {
 
   @FXML private ListView<CartLine> cartList;
+  @FXML private Button removeCartItemButton;
   @FXML private Separator buildSeparator;
   @FXML private VBox buildPane;
   @FXML private Label buildTitleLabel;
@@ -22,8 +23,6 @@ public class CashierController {
   @FXML private Label buildSummaryLabel;
   @FXML private VBox itemRows;
   @FXML private Button addToCartButton;
-
-
 
   private record CartLine(ComboType type, List<MenuCatalog.MenuItem> items, String comboName) {
     @Override
@@ -38,6 +37,9 @@ public class CashierController {
   @FXML
   private void initialize() {
     cartList.setItems(cartItems);
+    removeCartItemButton.setDisable(true);
+    cartList.getSelectionModel().selectedItemProperty().addListener(
+        (obs, oldVal, newVal) -> removeCartItemButton.setDisable(newVal == null));
     hideBuild();
   }
 
@@ -50,6 +52,14 @@ public class CashierController {
   @FXML
   private void cancelBuild() {
     hideBuild();
+  }
+
+  @FXML
+  private void removeSelectedCartItem() {
+    int index = cartList.getSelectionModel().getSelectedIndex();
+    if (index >= 0) {
+      cartItems.remove(index);
+    }
   }
 
   @FXML

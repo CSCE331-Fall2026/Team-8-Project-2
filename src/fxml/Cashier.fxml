@@ -21,6 +21,7 @@
             <HBox spacing="10.0">
                <children>
                   <Label text="Cart" />
+                  <Button fx:id="removeCartItemButton" onAction="#removeSelectedCartItem" text="Remove" />
                   <Button onAction="#clearCart" text="Clear" />
                </children>
             </HBox>
