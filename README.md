@@ -172,3 +172,44 @@ If you want, I can also add a short comment explaining the meaning of the MENU_I
   the generate_order_details function is currently assigning a single random item to each order, but the function is intended to generate details for each item in the order. As written, the loop only creates one order_detail row per order and doesn’t properly track the total across multiple items. I’d change it to iterate through a selected set of menu items for each order, add one row per item with its quantity, and update order_total by summing the price of each selected item. This will ensure the order_details table reflects the actual content of each order and keeps totals consistent.
 - Repeat the script append for each menu item.
   I repeated this script pattern for each menu item so the data generator appends a generated record for every item in the menu. Each menu item is processed in the same way, adding its associated ingredients, pricing, and generated SQL insert values to the output script.
+
+## AI Chat Log (Oct 2026)
+
+Cursor AI coding session used to get the JDBC demo running, set up JavaFX, organize `src/`, and create the ReadMe. Summary of the full chat below.
+
+### JDBC Swing demo (`demo/jdbc_swing_demo`)
+
+**User:** Showed terminal error `ClassNotFoundException: jdbcSQL` after  
+`java -cp ".;postgresql-42.2.8.jar" jdbcSQL`.
+
+**AI:** On Linux the classpath separator is `:`, not `;` (Windows). Use:
+
+```bash
+java -cp ".:postgresql-42.2.8.jar" jdbcSQL
+```
+
+**User:** Then got `No suitable driver found for jdbc:postgresql://...`.
+
+**AI:** The PostgreSQL JAR was missing from the folder. Download it into the demo directory, then run with the Linux classpath again.
+
+### Organize `src/`
+
+**User:** “organize src little”
+
+**AI:** Moved all `.fxml` files into `src/fxml/` and updated `GUIApp` to load `fxml/GUI.fxml`. Java sources stayed at `src/` root so compile/run commands stay simple.
+
+### FlowPane type buttons
+
+**User:** Buttons side by side until overflow, then wrap.
+
+**AI:** Put type buttons in a `FlowPane` with `hgap` / `vgap`.
+
+### README run instructions
+
+**User:** Add how to get this running to the README.
+
+**AI:** Added **Running the GUI** at the top of this file and rewrote [`src/README.md`](src/README.md) with compile/run steps and troubleshooting.
+
+### Prompt used for this log
+
+- Add this entire chat to the readme
