@@ -37,4 +37,4 @@ Combos table was moved to not be an inbetween step of the chain of OrderDetails 
 
 menu_price was dropped as a field from MenuItems because price is dependent on the combo type and a premium charge, not the individual item.
 
-Primary keys for id numbers of relevant fields are also now set to auto increment when they are created.
+Primary keys for id numbers are also now set to auto increment when they are created to simplify additions to database and data generation as a whole.
