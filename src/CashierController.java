@@ -168,16 +168,29 @@ public class CashierController {
       return;
     }
 
-    float price = 0f;
-    cartItems.add(new CartLine(build.type(), build.items(), build.cartLine(), price));
+    cartItems.add(new CartLine(build.type(), build.items(), build.cartLine(), 0f));
     refreshCart();
     hideBuild();
   }
 
   private void refreshCart() {
+    Connection conn = connectDb();
     float total = 0f;
-    for (CartLine line : cartItems) {
-      total += line.price();
+    try {
+      for (int i = 0; i < cartItems.size(); i++) {
+        CartLine line = cartItems.get(i);
+        float price = line.type().getPrice(conn);
+        cartItems.set(i, new CartLine(line.type(), line.items(), line.comboName(), price));
+        total += price;
+      }
+    } finally {
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (Exception e) {
+          System.out.println("Error closing database connection:\n" + e.getMessage());
+        }
+      }
     }
     cartTotalLabel.setText("Total: $" + String.format("%.2f", total));
   }

@@ -16,20 +16,29 @@ PM
 
 # Running the GUI
 
-The JavaFX POS app lives in [`src/`](src/). You need a recent JDK (**23+**, recommended **25 or 27**) and the OpenJFX SDK.
+The JavaFX POS app lives in [`src/`](src/). You need a recent JDK (**23+**, recommended **25 or 27**), the OpenJFX SDK, and the PostgreSQL JDBC driver.
 
-## 1. Install JavaFX
+## 1. Set up files
 
-Download the Linux/macOS/Windows **SDK** zip from [openjfx.io](https://openjfx.io/) (match your OS). Unzip it into the **project root** so you have:
+Download the Linux/macOS/Windows JavaFX **SDK** zip from [openjfx.io](https://openjfx.io/) (match your OS) and the PostgreSQL JDBC driver [`postgresql-42.2.8.jar`](https://jdbc.postgresql.org/download/). Put them in the **project root**, and create `src/dbSetup.java` with the team database credentials:
 
 ```text
 Team-8-Project-2/
   javafx-sdk-25/
     lib/
+  postgresql-42.2.8.jar
   src/
+    dbSetup.java
 ```
 
-(`javafx-sdk-25/` and `javafx-sdk-27/` are gitignored.)
+```java
+public final class dbSetup {
+  public static final String user = "<db username>";
+  public static final String pswd = "<db password>";
+}
+```
+
+`javafx-sdk-25/`, `javafx-sdk-27/`, `*.jar`, and `dbSetup.java` are gitignored, so each person has to add them locally.
 
 Confirm `javac -version` is 23+ (not an older 21-only toolchain). On Fedora, if `java` is new but `javac` is 21:
 
@@ -46,12 +55,16 @@ From `src/`:
 ```bash
 cd src
 javac --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml *.java
-java --enable-native-access=javafx.graphics --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml GUIApp
+java --enable-native-access=javafx.graphics --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml -cp ".:../postgresql-42.2.8.jar" GUIApp
 ```
 
-If your folder is `javafx-sdk-27`, swap that name in both commands.
+`-cp ".:../postgresql-42.2.8.jar"` loads the compiled classes in `src/` plus the Postgres driver. Without it, cart prices and placing orders fail with `No suitable driver found`. On Windows, use `;` instead of `:` in the classpath.
 
-Then open **Cashier** from the home screen to build bowls/plates into the cart.
+If your folder is `javafx-sdk-27`, swap that name in both commands. If the SDK lives somewhere else (for example one level above the project), change `../javafx-sdk-25/lib` to that path.
+
+You need to be on the TAMU network or VPN to reach the database.
+
+Then open **Cashier** from the home screen to build bowls/plates into the cart. Prices are pulled from the `combos` table each time the cart refreshes.
 
 More detail: [`src/README.md`](src/README.md).
 
