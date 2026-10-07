@@ -113,6 +113,19 @@ COMBOS = [
     (5, "A la carte", 0.00)
 ] 
 
+ENTREES = list(range(1, 13))
+SIDES   = [13, 14, 15, 16, 17]
+APPS    = [18, 19, 20, 21, 22]
+DRINKS  = [23]
+
+COMBO_ELIGIBLE = {
+    "Bowl":        ENTREES + SIDES,
+    "Plate":       ENTREES + SIDES,
+    "Big Plate":   ENTREES + SIDES,
+    "Family Meal": ENTREES + SIDES,
+    "A la carte":  ENTREES + SIDES + APPS + DRINKS,
+}
+
 
 def iso_timestamp(value: datetime) -> str:
     return value.isoformat(timespec="seconds")
@@ -213,18 +226,9 @@ def generate_combo_details(menu_items, combos):
     rows = []
     combo_detail_id = 1
     menu_item_ids = [item["menu_item_id"] for item in menu_items]
-    combo_size_map = {
-        "Bowl": 2,
-        "Plate": 3,
-        "Big Plate": 4,
-        "Family Meal": 4,
-        "A la carte": 1,
-    }
 
     for combo in combos:
-        target_count = combo_size_map.get(combo["combo_name"], 2)
-        selected_items = random.sample(menu_item_ids, k=min(target_count, len(menu_item_ids)))
-        for menu_item_id in selected_items:
+        for menu_item_id in COMBO_ELIGIBLE[combo["combo_name"]]:
             rows.append(
                 {
                     "combo_detail_id": combo_detail_id,
