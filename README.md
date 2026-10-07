@@ -14,6 +14,47 @@ PM
 
 - Brandon
 
+# Running the GUI
+
+The JavaFX POS app lives in [`src/`](src/). You need a recent JDK (**23+**, recommended **25 or 27**) and the OpenJFX SDK.
+
+## 1. Install JavaFX
+
+Download the Linux/macOS/Windows **SDK** zip from [openjfx.io](https://openjfx.io/) (match your OS). Unzip it into the **project root** so you have:
+
+```text
+Team-8-Project-2/
+  javafx-sdk-25/
+    lib/
+  src/
+```
+
+(`javafx-sdk-25/` and `javafx-sdk-27/` are gitignored.)
+
+Confirm `javac -version` is 23+ (not an older 21-only toolchain). On Fedora, if `java` is new but `javac` is 21:
+
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-27   # or java-25 / java-latest-openjdk
+export PATH="$JAVA_HOME/bin:$PATH"
+javac -version
+```
+
+## 2. Compile and run
+
+From `src/`:
+
+```bash
+cd src
+javac --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml *.java
+java --enable-native-access=javafx.graphics --module-path ../javafx-sdk-25/lib --add-modules javafx.controls,javafx.fxml GUIApp
+```
+
+If your folder is `javafx-sdk-27`, swap that name in both commands.
+
+Then open **Cashier** from the home screen to build bowls/plates into the cart.
+
+More detail: [`src/README.md`](src/README.md).
+
 # Database Schema and Design
 
 No AI was used to critique our database.
