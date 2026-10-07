@@ -108,9 +108,12 @@ PREMIUM_CHARGES = {
 COMBOS = [
     (1, "Bowl", 8.99),
     (2, "Plate", 10.99),
-    (3, "Big Plate", 12.99),
-    (4, "Family Meal", 24.99),
-    (5, "A la carte", 0.00)
+    (3, "Bigger Plate", 12.99),
+    (4, "A la carte", 24.99),
+    (5, "Drink", 24.99),
+    (6, "Bowl Combo", 24.99),
+    (7, "Plate Combo", 24.99),
+    (8, "Bigger Plate Combo", 0.00)
 ] 
 
 ENTREES = list(range(1, 13))
