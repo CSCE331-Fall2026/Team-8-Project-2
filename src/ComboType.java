@@ -1,23 +1,29 @@
 public enum ComboType {
-  BOWL("Bowl", 1, 1, 0),
-  PLATE("Plate", 1, 2, 0),
-  BIGGER_PLATE("Bigger Plate", 1, 3, 0),
-  A_LA_CARTE("A La Carte", 0, 0, 0),
-  DRINK("Drink", 0, 0, 1),
-  BOWL_COMBO("Bowl Combo", 1, 1, 1),
-  PLATE_COMBO("Plate Combo", 1, 2, 1),
-  BIGGER_PLATE_COMBO("Bigger Plate Combo", 1, 3, 1);
+  BOWL(1, "Bowl", 1, 1, 0),
+  PLATE(2, "Plate", 1, 2, 0),
+  BIGGER_PLATE(3, "Bigger Plate", 1, 3, 0),
+  A_LA_CARTE(4, "A La Carte", 0, 0, 0),
+  DRINK(5, "Drink", 0, 0, 1),
+  BOWL_COMBO(6, "Bowl Combo", 1, 1, 1),
+  PLATE_COMBO(7, "Plate Combo", 1, 2, 1),
+  BIGGER_PLATE_COMBO(8, "Bigger Plate Combo", 1, 3, 1);
 
+  private final int comboId;
   private final String displayName;
   private final int requiredSides;
   private final int requiredEntrees;
   private final int requiredDrinks;
 
-  ComboType(String displayName, int requiredSides, int requiredEntrees, int requiredDrinks) {
+  ComboType(int comboId, String displayName, int requiredSides, int requiredEntrees, int requiredDrinks) {
+    this.comboId = comboId;
     this.displayName = displayName;
     this.requiredSides = requiredSides;
     this.requiredEntrees = requiredEntrees;
     this.requiredDrinks = requiredDrinks;
+  }
+
+  public int comboId() {
+    return comboId;
   }
 
   public String displayName() {
