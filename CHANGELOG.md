@@ -33,9 +33,18 @@ While attempting to create test data, the group realized there was a missing ste
 
 ### Changes in Response to GUI Implementation
 
+#### Changes made in response to TA feedback in Phase 2
+Changed code in data_generation to produce combos correctly as per TA feedback.
+
+Cleaned up README.
+
+#### Changes before end of Phase 3
 Added views for all types of reports, inventory management, and cashier cart management
+- Cashier view connected to database, properly reflecting prices and adding to database.
+- Some Manager views connected to database, allowing for item discontinuation and price changes.
 
 Combos table was moved to not be an inbetween step of the chain of OrderDetails -> X(Combos) -> ComboDetails. This change allows for ComboDetails to track the individual MenuItems without tying them to fixed Combo types.
+- Code in data generation script has been changed according
 
 menu_price was dropped as a field from MenuItems because price is dependent on the combo type and a premium charge, not the individual item.
 
