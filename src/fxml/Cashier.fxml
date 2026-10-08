@@ -13,86 +13,102 @@
 <?import javafx.scene.layout.VBox?>
 
 <HBox prefHeight="500.0" prefWidth="800.0" spacing="10.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CashierController">
-   <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-   </padding>
-   <children>
-      <VBox prefWidth="250.0" spacing="10.0">
-         <children>
+  <padding>
+    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+  </padding>
+  <children>
+    <VBox prefWidth="250.0" spacing="10.0">
+      <children>
+        <HBox spacing="10.0">
+          <children>
+            <Label text="Cart" />
+            <Button fx:id="removeCartItemButton" onAction="#removeSelectedCartItem" text="Remove" />
+            <Button onAction="#clearCart" text="Clear" />
+          </children>
+        </HBox>
+        <ListView fx:id="cartList" VBox.vgrow="ALWAYS" />
+        <Label fx:id="cartTotalLabel" text="Total: $0.00" />
+        <Button maxWidth="Infinity" onAction="#doneOrder" text="Done" />
+      </children>
+    </VBox>
+    <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+      <children>
+        <HBox spacing="10.0">
+          <children>
+            <Label text="Types" />
+          </children>
+        </HBox>
+        <FlowPane hgap="10.0" vgap="10.0">
+          <children>
+            <Button onAction="#startType" text="Bowl">
+              <userData>
+                <String fx:value="BOWL" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="Plate">
+              <userData>
+                <String fx:value="PLATE" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="Bigger Plate">
+              <userData>
+                <String fx:value="BIGGER_PLATE" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="A La Carte">
+              <userData>
+                <String fx:value="A_LA_CARTE" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="Drink">
+              <userData>
+                <String fx:value="DRINK" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="Bowl Combo">
+              <userData>
+                <String fx:value="BOWL_COMBO" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="Plate Combo">
+              <userData>
+                <String fx:value="PLATE_COMBO" />
+              </userData>
+            </Button>
+            <Button onAction="#startType" text="Bigger Plate Combo">
+              <userData>
+                <String fx:value="BIGGER_PLATE_COMBO" />
+              </userData>
+            </Button>
+          </children>
+        </FlowPane>
+        <Separator fx:id="buildSeparator" managed="false" visible="false" />
+        <VBox fx:id="buildPane" managed="false" spacing="10.0" visible="false" VBox.vgrow="ALWAYS">
+          <children>
+            <Label fx:id="buildTitleLabel" text="Build" />
+            <Label fx:id="buildProgressLabel" text="Pick items" wrapText="true" />
+            <Label fx:id="buildSummaryLabel" text="Selected: (none)" wrapText="true" />
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+              <content>
+                <VBox fx:id="itemRows" spacing="10.0">
+                  <padding>
+                    <Insets bottom="5.0" right="5.0" />
+                  </padding>
+                </VBox>
+              </content>
+            </ScrollPane>
             <HBox spacing="10.0">
-               <children>
-                  <Label text="Cart" />
-                  <Button fx:id="removeCartItemButton" onAction="#removeSelectedCartItem" text="Remove" />
-                  <Button onAction="#clearCart" text="Clear" />
-               </children>
+              <children>
+                <Button onAction="#cancelBuild" text="Cancel" />
+                <Label text="Qty" />
+                <Spinner fx:id="orderQtySpinner" initialValue="1" max="20" min="1" prefWidth="70.0" />
+                <Button fx:id="addToCartButton" onAction="#addToCart" text="Add to cart" />
+              </children>
             </HBox>
-            <ListView fx:id="cartList" VBox.vgrow="ALWAYS" />
-            <Label fx:id="cartTotalLabel" text="Total: $0.00" />
-            <Button maxWidth="Infinity" onAction="#doneOrder" text="Done" />
-         </children>
-      </VBox>
-      <VBox spacing="10.0" HBox.hgrow="ALWAYS">
-         <children>
-            <HBox spacing="10.0">
-               <children>
-                  <Label text="Types" />
-               </children>
-            </HBox>
-            <FlowPane hgap="10.0" vgap="10.0">
-               <children>
-                  <Button onAction="#startType" text="Bowl">
-                     <userData><String fx:value="BOWL" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="Plate">
-                     <userData><String fx:value="PLATE" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="Bigger Plate">
-                     <userData><String fx:value="BIGGER_PLATE" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="A La Carte">
-                     <userData><String fx:value="A_LA_CARTE" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="Drink">
-                     <userData><String fx:value="DRINK" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="Bowl Combo">
-                     <userData><String fx:value="BOWL_COMBO" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="Plate Combo">
-                     <userData><String fx:value="PLATE_COMBO" /></userData>
-                  </Button>
-                  <Button onAction="#startType" text="Bigger Plate Combo">
-                     <userData><String fx:value="BIGGER_PLATE_COMBO" /></userData>
-                  </Button>
-               </children>
-            </FlowPane>
-            <Separator fx:id="buildSeparator" managed="false" visible="false" />
-            <VBox fx:id="buildPane" managed="false" spacing="10.0" visible="false" VBox.vgrow="ALWAYS">
-               <children>
-                  <Label fx:id="buildTitleLabel" text="Build" />
-                  <Label fx:id="buildProgressLabel" text="Pick items" wrapText="true" />
-                  <Label fx:id="buildSummaryLabel" text="Selected: (none)" wrapText="true" />
-                  <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox fx:id="itemRows" spacing="10.0">
-                           <padding>
-                              <Insets bottom="5.0" right="5.0" />
-                           </padding>
-                        </VBox>
-                     </content>
-                  </ScrollPane>
-                  <HBox spacing="10.0">
-                     <children>
-                        <Button onAction="#cancelBuild" text="Cancel" />
-                        <Label text="Qty" />
-                        <Spinner fx:id="orderQtySpinner" initialValue="1" max="20" min="1" prefWidth="70.0" />
-                        <Button fx:id="addToCartButton" onAction="#addToCart" text="Add to cart" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </VBox>
-      <Button onAction="#goBack" text="Back" />
-   </children>
+          </children>
+        </VBox>
+      </children>
+    </VBox>
+    <Button onAction="#goBack" text="Back" />
+  </children>
 </HBox>
