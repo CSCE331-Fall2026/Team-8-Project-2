@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 
 /** @author Team 8 */
@@ -9,7 +12,28 @@ public final class MenuCatalog {
     DRINK
   }
 
-  public record MenuItem(int id, String name, Category category) {}
+  public record MenuItem(int id, String name, Category category) {
+    /** Queries the database for this item's premium charge (0 if unavailable). */
+    public float getPremium(Connection conn) {
+      float premium = 0f;
+      if (conn == null) {
+        return premium;
+      }
+      try {
+        Statement stmt = conn.createStatement();
+        String query = "SELECT premium_charge FROM menu_items WHERE menu_item_id = " + id;
+        ResultSet result = stmt.executeQuery(query);
+        if (result.next()) {
+          premium = result.getFloat("premium_charge");
+        }
+        result.close();
+        stmt.close();
+      } catch (Exception e) {
+        System.out.println("Error fetching premium for " + name + ":\n" + e.getMessage());
+      }
+      return premium;
+    }
+  }
 
   private static final List<MenuItem> SIDES = List.of(
       new MenuItem(13, "Chow Mein", Category.SIDE),

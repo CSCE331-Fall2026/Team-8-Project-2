@@ -195,6 +195,9 @@ public class CashierController {
       for (int i = 0; i < cartItems.size(); i++) {
         CartLine line = cartItems.get(i);
         float price = line.type().getPrice(conn);
+        for (MenuCatalog.MenuItem item : line.items()) {
+          price += item.getPremium(conn);
+        }
         cartItems.set(i, new CartLine(line.type(), line.items(), line.comboName(), price));
         total += price;
       }
