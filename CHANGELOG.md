@@ -33,6 +33,8 @@ While attempting to create test data, the group realized there was a missing ste
 
 ### Changes in Response to GUI Implementation
 
+Added views for all types of reports, inventory management, and cashier cart management
+
 Combos table was moved to not be an inbetween step of the chain of OrderDetails -> X(Combos) -> ComboDetails. This change allows for ComboDetails to track the individual MenuItems without tying them to fixed Combo types.
 
 menu_price was dropped as a field from MenuItems because price is dependent on the combo type and a premium charge, not the individual item.
@@ -40,3 +42,5 @@ menu_price was dropped as a field from MenuItems because price is dependent on t
 Primary keys for id numbers are also now set to auto increment when they are created to simplify additions to database and data generation as a whole.
 
 Add active field for MenuItems to track if the item has been discontinued or not without fully deleting the menu item.
+
+Back button in cashier and manager views
