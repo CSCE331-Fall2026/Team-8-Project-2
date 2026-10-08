@@ -187,10 +187,11 @@ For the cashier, the ingredients need to be accessed in order to add them into a
 - All lower case and snake case for fields and entity names
 - Line break, indentation, and trailing comma for select statements with > 2 values
 
-### FXML
+### fxml
 
 - Two space indent before in every group (i.e. <menus>, <items>)
 - No lines of space between lines of code.
+- One line of space between imports, as well as another line for fxml version
 
 ## AI Usage
 
