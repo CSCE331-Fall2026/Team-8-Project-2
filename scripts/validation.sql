@@ -79,8 +79,7 @@ SELECT
 FROM orders o
 JOIN worst_day wd ON DATE_TRUNC('day', o.created_at) = wd.day_start
 JOIN order_details od ON od.order_id = o.order_id
-JOIN combos AS c ON c.combo_id = od.combo_id
-JOIN combo_details AS cd on c.combo_id = cd.combo_id
+JOIN combo_details AS cd on cd.order_detail_id = od.order_detail_id
 JOIN menu_items AS mi ON mi.menu_item_id = cd.menu_item_id
 GROUP BY mi.menu_item_id, mi.menu_item_name, wd.day_start
 ORDER BY sold_total DESC
