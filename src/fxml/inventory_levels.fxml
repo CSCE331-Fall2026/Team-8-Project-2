@@ -16,15 +16,18 @@
 
 <VBox prefHeight="520.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagerController">
   <children>
+    <HBox spacing="10.0">
+      <padding>
+        <Insets bottom="0.0" left="15.0" right="15.0" top="10.0" />
+      </padding>
+    </HBox>
     <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
       <tabs>
-
-        <!-- ===================== INVENTORY TAB ===================== -->
         <Tab text="Inventory Levels">
           <content>
             <VBox spacing="10.0">
               <padding>
-                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0" />
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
               </padding>
               <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Inventory Levels">
@@ -55,17 +58,16 @@
                   </children>
                 </HBox>
                 <Label fx:id="inventoryStatusLabel" />
+                    <Button onAction="#goBack" text="Back" />
               </children>
             </VBox>
           </content>
         </Tab>
-
-        <!-- ======================= MENU TAB ======================== -->
         <Tab text="Menu">
           <content>
             <VBox spacing="10.0">
               <padding>
-                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0" />
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
               </padding>
               <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Combo Prices">
