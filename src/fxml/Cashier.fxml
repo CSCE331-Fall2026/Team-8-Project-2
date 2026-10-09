@@ -60,6 +60,9 @@
                   <Button onAction="#startType" text="Bigger Plate Combo">
                      <userData><String fx:value="BIGGER_PLATE_COMBO" /></userData>
                   </Button>
+                  <Button onAction="#startType" text="Appetizer">
+                     <userData><String fx:value="APPETIZER" /></userData>
+                  </Button>
                </children>
             </FlowPane>
             <Separator fx:id="buildSeparator" managed="false" visible="false" />

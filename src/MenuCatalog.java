@@ -9,6 +9,7 @@ public final class MenuCatalog {
   public enum Category {
     SIDE,
     ENTREE,
+    APPETIZER,
     DRINK
   }
 
@@ -56,6 +57,13 @@ public final class MenuCatalog {
       new MenuItem(11, "SweetFire Chicken Breast", Category.ENTREE),
       new MenuItem(12, "Black Pepper Sirloin Steak (Premium)", Category.ENTREE));
 
+  private static final List<MenuItem> APPETIZERS = List.of(
+      new MenuItem(18, "Chicken Egg Roll", Category.APPETIZER),
+      new MenuItem(19, "Veggie Spring Roll", Category.APPETIZER),
+      new MenuItem(20, "Cream Cheese Rangoon", Category.APPETIZER),
+      new MenuItem(21, "Chicken Potstickers", Category.APPETIZER),
+      new MenuItem(22, "Apple Pie Roll", Category.APPETIZER));
+
   private static final List<MenuItem> DRINKS = List.of(
       new MenuItem(23, "Soda", Category.DRINK));
 
@@ -69,6 +77,10 @@ public final class MenuCatalog {
     return ENTREES;
   }
 
+  public static List<MenuItem> appetizers() {
+    return APPETIZERS;
+  }
+
   public static List<MenuItem> drinks() {
     return DRINKS;
   }
@@ -77,6 +89,7 @@ public final class MenuCatalog {
     return switch (category) {
       case SIDE -> SIDES;
       case ENTREE -> ENTREES;
+      case APPETIZER -> APPETIZERS;
       case DRINK -> DRINKS;
     };
   }
@@ -85,6 +98,7 @@ public final class MenuCatalog {
     return switch (category) {
       case SIDE -> "Sides";
       case ENTREE -> "Entrees";
+      case APPETIZER -> "Appetizers";
       case DRINK -> "Drinks";
     };
   }

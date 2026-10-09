@@ -37,6 +37,7 @@ public final class BuildState {
     }
     return count(MenuCatalog.Category.SIDE) == type.requiredSides()
         && count(MenuCatalog.Category.ENTREE) == type.requiredEntrees()
+        && count(MenuCatalog.Category.APPETIZER) == type.requiredAppetizers()
         && count(MenuCatalog.Category.DRINK) == type.requiredDrinks();
   }
 
