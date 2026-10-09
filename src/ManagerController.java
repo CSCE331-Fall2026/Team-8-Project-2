@@ -35,6 +35,8 @@ public class ManagerController {
   @FXML private TableColumn<ComboRow, String> comboPriceColumn;
   @FXML private TextField newComboPriceField;
   @FXML private Button updateComboPriceButton;
+  @FXML private TextField newPremiumPriceField;
+  @FXML private Button updatePremiumButton;
   @FXML private TableView<MenuItemRow> menuItemTable;
   @FXML private TableColumn<MenuItemRow, String> menuItemNameColumn;
   @FXML private TableColumn<MenuItemRow, String> menuItemPremiumColumn;
@@ -53,7 +55,6 @@ public class ManagerController {
 
   @FXML
   private void initialize() {
-    System.out.println("ManagerController initialized");
     // Inventory table
     inventoryTable.setItems(inventoryItems);
     inventoryNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().name()));
@@ -318,6 +319,62 @@ public class ManagerController {
 
     refreshMenu();
   }
+
+    @FXML
+  private void updatePremiumPrice() {
+    MenuItemRow selected = menuItemTable.getSelectionModel().getSelectedItem();
+    if (selected == null || !selected.active()) {
+      return;
+    }
+
+    // Validate before building SQL so only a clean number is ever concatenated in
+    double newPrice;
+    try {
+      newPrice = Double.parseDouble(newPremiumPriceField.getText().trim());
+    }
+    catch (NumberFormatException e) {
+      menuStatusLabel.setText("Enter a valid number for the new price.");
+      return;
+    }
+    if (!Double.isFinite(newPrice) || newPrice < 0) {
+      menuStatusLabel.setText("Price must be zero or greater.");
+      return;
+    }
+
+    Connection conn = connectDb();
+    if (conn == null) {
+      menuStatusLabel.setText("Could not connect to the database.");
+      return;
+    }
+
+    try {
+      Statement stmt = conn.createStatement();
+      String updatePremiumPriceStatement =
+        "UPDATE menu_items SET premium_charge = " + newPrice + " " +
+        "WHERE menu_item_id = " + selected.id();
+      stmt.executeUpdate(updatePremiumPriceStatement);
+      stmt.close();
+
+      menuStatusLabel.setText("Updated " + selected.name() + " to $" + String.format("%.2f", newPrice));
+      newPremiumPriceField.clear();
+    }
+    catch (Exception e) {
+      System.out.println("Error updating combo price:\n" + e.getMessage());
+      menuStatusLabel.setText("Error updating combo price.");
+      return;
+    }
+    finally {
+      try {
+        conn.close();
+      }
+      catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    refreshMenu();
+  }
+
 
   @FXML
   private void discontinueMenuItem() {

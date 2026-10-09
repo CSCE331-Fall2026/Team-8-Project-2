@@ -89,8 +89,10 @@
                 <HBox spacing="10.0">
                   <children>
                     <Label text="New price:" />
-                    <TextField fx:id="newComboPriceField" promptText="e.g. 8.99" />
-                    <Button fx:id="updateComboPriceButton" onAction="#updateComboPrice" text="Update Price" />
+                    <Button fx:id="updateComboPriceButton" onAction="#updateComboPrice" text="Update Price">
+                                 <graphic>
+                          <TextField fx:id="newComboPriceField" promptText="e.g. 8.99" />
+                                 </graphic></Button>
                   </children>
                 </HBox>
 
@@ -118,6 +120,11 @@
                     <Button fx:id="discontinueMenuItemButton" onAction="#discontinueMenuItem" text="Discontinue Selected Item" />
                     <Button fx:id="reactivateMenuItemButton" onAction="#reactivateMenuItem" text="Reactivate Selected Item" />
                     <Button onAction="#refreshMenu" text="Refresh" />
+                              <Button fx:id="updatePremiumButton" onAction="#updatePremiumPrice" text="Update Price">
+                                 <graphic>
+                                    <TextField fx:id="newPremiumPriceField" prefHeight="26.0" promptText="e.g. 8.99" />
+                                 </graphic>
+                              </Button>
                   </children>
                 </HBox>
                 <Label fx:id="menuStatusLabel" />
