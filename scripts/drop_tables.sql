@@ -10,3 +10,4 @@ DROP TYPE IF EXISTS "order_status" CASCADE;
 DROP TYPE IF EXISTS "payment_method" CASCADE;
 DROP TYPE IF EXISTS "storage_type" CASCADE;
 DROP TYPE IF EXISTS "combo_type" CASCADE;
+DROP TYPE IF EXISTS "menu_item_type" CASCADE;

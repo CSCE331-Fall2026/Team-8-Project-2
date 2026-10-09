@@ -135,6 +135,7 @@ This table will hold the menu items that are inside a given combo. Because it ex
 - menu_item_name: To keep track of the menu item name.
 - premium_charge: For applicable items, adds a flat charge on top of the base price. This column will be used more on the business logic of calculating order price.
 - active: Tracks if the item is discontinued or active. Having this field avoids deletions to keep order history intact.
+- menu_item_type: tracks what kind of category this menu item belongs to like an entree, side, drink, or appetizer
 
 This table holds the names and ids of full items that can be on a menu like orange chicken. It also tracks if it has a premium charge.
 
@@ -255,10 +256,12 @@ java -cp ".:postgresql-42.2.8.jar" jdbcSQL
 - Add this entire chat to the readme
 
 ### Prompt used to reformat Cashier.fxml
-  Don't change a LINE of code, but can you change the style of the code to match the following:
-  
-  FXML
-  - Two space indent before in every group (i.e. <menus>, <items>)
-  - No lines of space between lines of code.
 
-  *Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
+Don't change a LINE of code, but can you change the style of the code to match the following:
+
+FXML
+
+- Two space indent before in every group (i.e. <menus>, <items>)
+- No lines of space between lines of code.
+
+\*Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
