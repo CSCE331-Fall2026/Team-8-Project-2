@@ -67,3 +67,4 @@ TODO:
 - Add appetizers section to menu
 - Disallow discontinued items to be added
 - Allow editing of premium charges
+- When adding menu item, allow selection of ingredients
