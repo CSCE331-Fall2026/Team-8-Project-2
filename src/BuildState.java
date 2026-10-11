@@ -37,7 +37,8 @@ public final class BuildState {
     }
     return count(MenuCatalog.Category.SIDE) == type.requiredSides()
         && count(MenuCatalog.Category.ENTREE) == type.requiredEntrees()
-        && count(MenuCatalog.Category.DRINK) == type.requiredDrinks();
+        && count(MenuCatalog.Category.DRINK) == type.requiredDrinks()
+        && count(MenuCatalog.Category.APPETIZER) == type.requiredAppetizers();
   }
 
   public String summary() {
@@ -53,7 +54,8 @@ public final class BuildState {
 
   public List<MenuCatalog.Category> visibleCategories() {
     if (type.isALaCarte()) {
-      return List.of(MenuCatalog.Category.SIDE, MenuCatalog.Category.ENTREE);
+      return List.of(
+          MenuCatalog.Category.SIDE, MenuCatalog.Category.ENTREE, MenuCatalog.Category.APPETIZER);
     }
     List<MenuCatalog.Category> categories = new ArrayList<>();
     for (MenuCatalog.Category category : MenuCatalog.Category.values()) {

@@ -1,15 +1,35 @@
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /** @author Team 8 */
 public final class MenuCatalog {
 
+  /** Mirrors the menu_item_type enum in the database. */
   public enum Category {
-    SIDE,
-    ENTREE,
-    DRINK
+    SIDE("side"),
+    ENTREE("entree"),
+    APPETIZER("appetizer"),
+    DRINK("drink");
+
+    private final String dbValue;
+
+    Category(String dbValue) {
+      this.dbValue = dbValue;
+    }
+
+    public static Category fromDb(String value) {
+      for (Category category : values()) {
+        if (category.dbValue.equalsIgnoreCase(value)) {
+          return category;
+        }
+      }
+      return null;
+    }
   }
 
   public record MenuItem(int id, String name, Category category) {
@@ -35,45 +55,42 @@ public final class MenuCatalog {
     }
   }
 
-  private static final List<MenuItem> SIDES = List.of(
-      new MenuItem(13, "Chow Mein", Category.SIDE),
-      new MenuItem(14, "Fried Rice", Category.SIDE),
-      new MenuItem(15, "Super Greens", Category.SIDE),
-      new MenuItem(16, "White Steamed Rice", Category.SIDE),
-      new MenuItem(17, "Brown Steamed Rice", Category.SIDE));
-
-  private static final List<MenuItem> ENTREES = List.of(
-      new MenuItem(1, "The Original Orange Chicken", Category.ENTREE),
-      new MenuItem(2, "Honey Walnut Shrimp (Premium)", Category.ENTREE),
-      new MenuItem(3, "Beijing Beef", Category.ENTREE),
-      new MenuItem(4, "Broccoli Beef", Category.ENTREE),
-      new MenuItem(5, "Grilled Teriyaki Chicken", Category.ENTREE),
-      new MenuItem(6, "Kung Pao Chicken", Category.ENTREE),
-      new MenuItem(7, "Honey Sesame Chicken Breast", Category.ENTREE),
-      new MenuItem(8, "Black Pepper Chicken", Category.ENTREE),
-      new MenuItem(9, "Mushroom Chicken", Category.ENTREE),
-      new MenuItem(10, "String Bean Chicken Breast", Category.ENTREE),
-      new MenuItem(11, "SweetFire Chicken Breast", Category.ENTREE),
-      new MenuItem(12, "Black Pepper Sirloin Steak (Premium)", Category.ENTREE));
-
-  private static final List<MenuItem> DRINKS = List.of(
-      new MenuItem(23, "Soda", Category.DRINK));
+  private static Map<Category, List<MenuItem>> itemsByCategory = emptyCatalog();
 
   private MenuCatalog() {}
 
-  /** @return the side items */
-  public static List<MenuItem> sides() {
-    return SIDES;
-  }
-
-  /** @return the entree items */
-  public static List<MenuItem> entrees() {
-    return ENTREES;
-  }
-
-  /** @return the drink items */
-  public static List<MenuItem> drinks() {
-    return DRINKS;
+  public static void refresh(Connection conn) {
+    if (conn == null) {
+      return;
+    }
+    Map<Category, List<MenuItem>> loaded = emptyCatalog();
+    try {
+      Statement stmt = conn.createStatement();
+      // TODO: the live DB column is misspelled "meu_item_type"; switch back once it's renamed
+      String query =
+          "SELECT menu_item_id, menu_item_name, meu_item_type AS menu_item_type " +
+          "FROM menu_items " +
+          "WHERE active = TRUE " +
+          "ORDER BY menu_item_id";
+      ResultSet result = stmt.executeQuery(query);
+      while (result.next()) {
+        Category category = Category.fromDb(result.getString("menu_item_type"));
+        if (category == null) {
+          continue;
+        }
+        loaded.get(category).add(new MenuItem(
+            result.getInt("menu_item_id"),
+            result.getString("menu_item_name"),
+            category));
+      }
+      result.close();
+      stmt.close();
+    } catch (Exception e) {
+      System.out.println("Error loading menu items:\n" + e.getMessage());
+      return;
+    }
+    loaded.replaceAll((category, items) -> List.copyOf(items));
+    itemsByCategory = loaded;
   }
 
   /**
@@ -81,11 +98,7 @@ public final class MenuCatalog {
    * @return the items in the category
    */
   public static List<MenuItem> items(Category category) {
-    return switch (category) {
-      case SIDE -> SIDES;
-      case ENTREE -> ENTREES;
-      case DRINK -> DRINKS;
-    };
+    return itemsByCategory.get(category);
   }
 
   /**
@@ -96,7 +109,16 @@ public final class MenuCatalog {
     return switch (category) {
       case SIDE -> "Sides";
       case ENTREE -> "Entrees";
+      case APPETIZER -> "Appetizers";
       case DRINK -> "Drinks";
     };
+  }
+
+  private static Map<Category, List<MenuItem>> emptyCatalog() {
+    Map<Category, List<MenuItem>> catalog = new EnumMap<>(Category.class);
+    for (Category category : Category.values()) {
+      catalog.put(category, new ArrayList<>());
+    }
+    return catalog;
   }
 }

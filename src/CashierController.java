@@ -217,6 +217,15 @@ public class CashierController {
   }
 
   private void beginBuild(ComboType type) {
+    Connection conn = connectDb();
+    if (conn != null) {
+      MenuCatalog.refresh(conn);
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        System.out.println("Error closing database connection:\n" + e.getMessage());
+      }
+    }
     build = new BuildState(type);
     buildTitleLabel.setText(type.displayName());
     orderQtySpinner.getValueFactory().setValue(1);

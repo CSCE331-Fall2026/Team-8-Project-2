@@ -114,7 +114,8 @@ COMBOS = [
     (5, "Drink", 2.99),
     (6, "Bowl Combo", 10.99),
     (7, "Plate Combo", 12.99),
-    (8, "Bigger Plate Combo", 14.99)
+    (8, "Bigger Plate Combo", 14.99),
+    (9, "Appetizer", 0.00)
 ] 
 
 # Categorizing items
@@ -133,6 +134,7 @@ COMBO_ELIGIBLE = {
     "Bowl Combo":  ENTREES + SIDES,
     "Plate Combo": ENTREES + SIDES,
     "Bigger Plate Combo": ENTREES + SIDES,
+    "Appetizer":   APPS,
 }
 
 

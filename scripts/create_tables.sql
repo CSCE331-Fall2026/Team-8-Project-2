@@ -8,7 +8,8 @@ CREATE TYPE combo_type AS ENUM ('Bowl',
     'Drink', 
     'Bowl Combo', 
     'Plate Combo', 
-    'Bigger Plate Combo');
+    'Bigger Plate Combo',
+    'Appetizer');
 CREATE TYPE menu_item_type AS ENUM ('entree',
     'side',
     'appetizer',

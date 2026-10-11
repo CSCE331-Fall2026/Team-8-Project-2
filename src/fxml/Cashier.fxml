@@ -65,6 +65,11 @@
                 <String fx:value="DRINK" />
               </userData>
             </Button>
+            <Button onAction="#startType" text="Appetizer">
+              <userData>
+                <String fx:value="APPETIZER" />
+              </userData>
+            </Button>
             <Button onAction="#startType" text="Bowl Combo">
               <userData>
                 <String fx:value="BOWL_COMBO" />
