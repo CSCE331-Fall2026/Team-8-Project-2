@@ -18,7 +18,7 @@ public class GUIController {
 
   @FXML
   private void openManager(ActionEvent event) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("fxml/inventory_levels.fxml"));
+    Parent root = FXMLLoader.load(getClass().getResource("fxml/manager.fxml"));
     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     stage.setScene(new Scene(root, 800, 500));
     stage.setTitle("Manager");

@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import java.sql.*;
 import java.util.Optional;
 
-public class ManagerController {
+public class InventoryController {
 
 
   @FXML private TableView<InventoryRow> inventoryTable;
