@@ -68,3 +68,23 @@ TODO:
 - Disallow discontinued items to be added
 - Allow editing of premium charges
 - When adding menu item, allow selection of ingredients
+
+### Changes made during final sprint
+
+#### Manager side
+
+Fleshed out Manager UI through button and feature functionality.
+
+Implemented time-sales analysis for sales made throughout the day.
+
+#### Cashier side
+
+Implemented menu items dynamically, previously hard-coded.
+
+Added new Combo feature to account for appetizers.
+
+#### Database Changes
+
+Added new appetizer combo feature to database.
+
+Fixed spelling regarding menu_item_type.
