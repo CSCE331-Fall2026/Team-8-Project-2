@@ -78,14 +78,14 @@ TODO:
 #### Manager side
 
 Fleshed out Manager UI through button and feature functionality.
-
-Implemented time-sales analysis for sales made throughout the day.
+- Implemented time-sales analysis for sales made throughout the day.
+- Buttons now lead to different parts of the view
 
 #### Cashier side
 
-Implemented menu items dynamically, previously hard-coded.
-
-Added new Combo feature to account for appetizers.
+Fixed issues pointed out during the Phase 3 demo
+- Implemented menu items dynamically, previously hard-coded.
+- Added new Combo feature to account for appetizers.
 
 #### Database Changes
 
