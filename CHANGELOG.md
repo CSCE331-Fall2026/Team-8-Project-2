@@ -1,7 +1,5 @@
 # Changelog
 
-## Database Changelog
-
 ### Changes in response to TA feedback from 9/22 Lab
 
 - add order_total to Orders entity: Minimizes query overhead by tracking total cost of an entire order in top level entity. Note that this only allows for whole order refunds in response to assignment scope from TA.
@@ -15,6 +13,8 @@
 - adjusted names of fields to tie them closer to their entity.
   - MenuItemIngredients: quantity -> ingredient_quantity
   - Orders: status -> order_status
+
+---
 
 ### Changes in response to Database Population
 
@@ -30,6 +30,8 @@ While attempting to create test data, the group realized there was a missing ste
     - combo_detail_id (PK), menu_item_id (FK), combo_id (FK), servings
 
   - Renamed MenuItemIngredients to MenuItemDetails to keep naming conventions consistent
+
+---
 
 ### Changes in Response to GUI Implementation
 
@@ -68,6 +70,8 @@ TODO:
 - Disallow discontinued items to be added
 - Allow editing of premium charges
 - When adding menu item, allow selection of ingredients
+
+---
 
 ### Changes made during final sprint
 
