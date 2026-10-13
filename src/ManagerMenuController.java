@@ -15,10 +15,26 @@ public class ManagerMenuController {
 
   @FXML
   private void initialize() {
-    // TODO: load the stock summary (avg / highest / lowest) into the three Text fields
+    
+  }
+
+  @FXML
+  private void goBack(ActionEvent event) {
+      try {
+          FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GUI.fxml"));
+          Parent root = fxmlLoader.load();
+          Node source = (Node) event.getSource();
+          source.getScene().setRoot(root);
+      } catch (Exception e) {
+          System.out.println("Error returning to main screen:\n" + e.getMessage());
+          e.printStackTrace();
+      }
   }
 
   // ======================== INVENTORY ========================
+
+
+
 
   @FXML
   private void openViewInventory(ActionEvent event) {

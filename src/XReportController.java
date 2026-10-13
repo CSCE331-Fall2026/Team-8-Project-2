@@ -59,7 +59,6 @@ public class XReportController {
             Statement stmt = conn.createStatement();
             String selectSalesPerHourStatement = "SELECT EXTRACT(HOUR FROM created_at)::int AS sale_hour, COUNT(*) as order_count, SUM(order_total) AS total_sales FROM orders WHERE order_status = 'paid' AND created_at::date = CURRENT_DATE GROUP BY sale_hour ORDER BY sale_hour";
             ResultSet result = stmt.executeQuery(selectSalesPerHourStatement);
-            System.out.println("sdgfdfssffdsfsdsd");
             while (result.next()) {
                 int orders = result.getInt("order_count");
                 double sales = result.getDouble("total_sales");
