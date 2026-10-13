@@ -167,9 +167,9 @@ For the manager, knowing the quantity in stock, as well as the storage type of a
 
 For the cashier, the ingredients need to be accessed in order to add them into a menu item via the join table.
 
-## Style Guide
+# Style Guide
 
-### Python
+## Python
 
 - Snake case and capitalized global variables
 - Key value pairs on separate lines when block defined
@@ -177,22 +177,24 @@ For the cashier, the ingredients need to be accessed in order to add them into a
 - Global variables all stay at the top
 - Four spaces of indent to divide groups (i.e. if statements, while statements, functions)
 
-### Java
+## Java
 
 - Two space indent when using a new group (i.e. if statements, while statements, functions)
 - One line between every function
 - Comments in important spots or inline comments only.
 
-### SQL
+## SQL
 
 - All lower case and snake case for fields and entity names
 - Line break, indentation, and trailing comma for select statements with > 2 values
 
-### fxml
+## fxml
 
 - Two space indent before in every group (i.e. <menus>, <items>)
 - No lines of space between lines of code.
 - One line of space between imports, as well as another line for fxml version
+
+# AI Usage and Chat Log
 
 ## AI Usage
 
@@ -214,7 +216,7 @@ If you want, I can also add a short comment explaining the meaning of the MENU_I
 - Repeat the script append for each menu item.
   I repeated this script pattern for each menu item so the data generator appends a generated record for every item in the menu. Each menu item is processed in the same way, adding its associated ingredients, pricing, and generated SQL insert values to the output script.
 
-## AI Chat Log (Oct 2026)
+## AI Chat Log
 
 Cursor AI coding session used to get the JDBC demo running, set up JavaFX, organize `src/`, and create the ReadMe. Summary of the full chat below.
 
@@ -254,6 +256,7 @@ java -cp ".:postgresql-42.2.8.jar" jdbcSQL
 ### Prompt used for this log
 
 - Add this entire chat to the readme
+
 
 ### Prompt used to reformat Cashier.fxml
 
