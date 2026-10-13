@@ -129,7 +129,7 @@ For the cashier, tracking the order quantity allows for the count of a specific 
 
 This table will hold the menu items that are inside a given combo. Because it exists, a cashier will not have to scroll down a large list looking for the exact order permuation that the customer asks for.
 
-## MenuItem
+## MenuItems
 
 - menu_item_id: To keep track of each menu item uniquely such as bowls, plates, and combos.
 - menu_item_name: To keep track of the menu item name.
