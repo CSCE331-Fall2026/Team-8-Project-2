@@ -167,9 +167,9 @@ For the manager, knowing the quantity in stock, as well as the storage type of a
 
 For the cashier, the ingredients need to be accessed in order to add them into a menu item via the join table.
 
-## Style Guide
+# Style Guide
 
-### Python
+## Python
 
 - Snake case and capitalized global variables
 - Key value pairs on separate lines when block defined
@@ -177,22 +177,33 @@ For the cashier, the ingredients need to be accessed in order to add them into a
 - Global variables all stay at the top
 - Four spaces of indent to divide groups (i.e. if statements, while statements, functions)
 
-### Java
+## Java
 
 - Two space indent when using a new group (i.e. if statements, while statements, functions)
 - One line between every function
 - Comments in important spots or inline comments only.
 
-### SQL
+## SQL
 
 - All lower case and snake case for fields and entity names
 - Line break, indentation, and trailing comma for select statements with > 2 values
 
-### fxml
+## fxml
 
 - Two space indent before in every group (i.e. <menus>, <items>)
 - No lines of space between lines of code.
 - One line of space between imports, as well as another line for fxml version
+
+### Prompt used to reformat Cashier.fxml
+
+Don't change a LINE of code, but can you change the style of the code to match the following:
+
+FXML
+
+- Two space indent before in every group (i.e. <menus>, <items>)
+- No lines of space between lines of code.
+
+\*Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
 
 ## AI Usage
 
@@ -254,14 +265,3 @@ java -cp ".:postgresql-42.2.8.jar" jdbcSQL
 ### Prompt used for this log
 
 - Add this entire chat to the readme
-
-### Prompt used to reformat Cashier.fxml
-
-Don't change a LINE of code, but can you change the style of the code to match the following:
-
-FXML
-
-- Two space indent before in every group (i.e. <menus>, <items>)
-- No lines of space between lines of code.
-
-\*Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
