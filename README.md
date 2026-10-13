@@ -194,16 +194,7 @@ For the cashier, the ingredients need to be accessed in order to add them into a
 - No lines of space between lines of code.
 - One line of space between imports, as well as another line for fxml version
 
-### Prompt used to reformat Cashier.fxml
-
-Don't change a LINE of code, but can you change the style of the code to match the following:
-
-FXML
-
-- Two space indent before in every group (i.e. <menus>, <items>)
-- No lines of space between lines of code.
-
-\*Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
+# AI Usage and Chat Log
 
 ## AI Usage
 
@@ -225,7 +216,7 @@ If you want, I can also add a short comment explaining the meaning of the MENU_I
 - Repeat the script append for each menu item.
   I repeated this script pattern for each menu item so the data generator appends a generated record for every item in the menu. Each menu item is processed in the same way, adding its associated ingredients, pricing, and generated SQL insert values to the output script.
 
-## AI Chat Log (Oct 2026)
+## AI Chat Log
 
 Cursor AI coding session used to get the JDBC demo running, set up JavaFX, organize `src/`, and create the ReadMe. Summary of the full chat below.
 
@@ -265,3 +256,15 @@ java -cp ".:postgresql-42.2.8.jar" jdbcSQL
 ### Prompt used for this log
 
 - Add this entire chat to the readme
+
+
+### Prompt used to reformat Cashier.fxml
+
+Don't change a LINE of code, but can you change the style of the code to match the following:
+
+FXML
+
+- Two space indent before in every group (i.e. <menus>, <items>)
+- No lines of space between lines of code.
+
+\*Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
