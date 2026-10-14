@@ -469,7 +469,7 @@ public class InventoryController {
   @FXML
   private void goBack(ActionEvent event) {
     try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GUI.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/manager.fxml"));
       Parent root = fxmlLoader.load();
       Node source = (Node) event.getSource();
       source.getScene().setRoot(root);
