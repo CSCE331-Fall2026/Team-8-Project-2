@@ -29,6 +29,10 @@ db_scripts.txt
 hs_err_pid*
 replay_pid*
 
+# IDE files
+*.idea
+*.iml
+
 dbSetup.java
 
 javafx-sdk-25/

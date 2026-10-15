@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import java.sql.*;
 import java.util.Optional;
 
-public class ManagerController {
+public class InventoryController {
 
 
   @FXML private TableView<InventoryRow> inventoryTable;
@@ -469,7 +469,7 @@ public class ManagerController {
   @FXML
   private void goBack(ActionEvent event) {
     try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GUI.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/manager.fxml"));
       Parent root = fxmlLoader.load();
       Node source = (Node) event.getSource();
       source.getScene().setRoot(root);
