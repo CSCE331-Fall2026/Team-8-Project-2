@@ -1,15 +1,16 @@
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
+
+import java.util.Comparator;
 import java.sql.*;
 
 public class RestockReportController {
@@ -17,53 +18,151 @@ public class RestockReportController {
     // ===================== Restock Report =====================
 
     @FXML
-    private TableView<HourRow> restockReportTable;
+    private TableView<RestockRow> restockReportTable;
     @FXML
-    private TableColumn<HourRow, String> itemColumn;
+    private TableColumn<RestockRow, String> idColumn;
     @FXML
-    private TableColumn<HourRow, String> qtyColumn;
+    private TableColumn<RestockRow, String> itemNameColumn;
     @FXML
-    private TableColumn<HourRow, String> expiryColumn;
+    private TableColumn<RestockRow, String> itemQtyColumn;
     @FXML
-    private ChoiceBox<String> storageTypePicker;
+    private TableColumn<RestockRow, String> itemMinQtyColumn;
+    @FXML
+    private TableColumn<RestockRow, String> itemExpiryColumn;
+    @FXML
+    private TableColumn<RestockRow, String> storageTypeColumn;
+    @FXML
+    private ChoiceBox<StorageType> storageTypePicker;
+    @FXML
+    private Label reportStatusLabel;
 
-    private record HourRow(int hour, double sales, int orders) {
+    private record RestockRow (
+            int itemId,
+            String itemName,
+            double itemQty,
+            String itemExpiry,
+            String storageType,
+            double itemMinQty
+    ) { }
+
+    private enum StorageType {
+        ALL("All", null),
+        PANTRY("Pantry", "pantry"),
+        REFRIGERATOR("Refrigerator", "refrigerator"),
+        FREEZER("Freezer", "freezer");
+
+        StorageType(String storageLabel, String dbLabel) {
+            this.storageLabel = storageLabel;
+            this.dbLabel = dbLabel;
+        }
+
+        public final String storageLabel;
+        public final String dbLabel;
+
+        @Override
+        public String toString() { return storageLabel; }
+
+        public String getDbLabel() { return dbLabel; }
     }
 
-    private final ObservableList<HourRow> restockItems = FXCollections.observableArrayList();
+    private void applyFilter() {
+        StorageType selected = storageTypePicker.getValue();
+
+        filteredItems.setPredicate(row ->
+                selected == null || selected == StorageType.ALL || selected.getDbLabel().equalsIgnoreCase(row.storageType()));
+    }
+
+    private final ObservableList<RestockRow> restockItems = FXCollections.observableArrayList();
+    private FilteredList<RestockRow> filteredItems;
 
     @FXML
     private void initialize() {
+        filteredItems = new FilteredList<>(restockItems, row -> true);
+        SortedList<RestockRow> sortedItems = new SortedList<>(filteredItems);
+        sortedItems.comparatorProperty().bind(restockReportTable.comparatorProperty());
+        restockReportTable.setItems(sortedItems);
 
+        storageTypePicker.getItems().addAll(StorageType.values());
+        storageTypePicker.setValue(StorageType.ALL);
+        storageTypePicker.valueProperty().addListener(observedValue -> applyFilter());
+
+        idColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.valueOf(cell.getValue().itemId()))
+        );
+        itemNameColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().itemName())
+        );
+        itemQtyColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.valueOf(cell.getValue().itemQty()))
+        );
+        itemExpiryColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().itemExpiry())
+        );
+        storageTypeColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().storageType())
+        );
+        itemMinQtyColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.valueOf(cell.getValue().itemMinQty()))
+        );
+
+        idColumn.setComparator(Comparator.comparingInt(Integer::parseInt));
+        itemQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
+        itemMinQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
+
+        restockReportTable.setRowFactory(tableView -> new TableRow<>() {
+            @Override
+            protected void updateItem(RestockRow row, boolean empty) {
+                super.updateItem(row, empty);
+                if (!empty && row != null && row.itemQty() <= (row.itemMinQty() * 1.25)) {
+                    setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                } else if (!empty && row != null && row.itemQty() <= (row.itemMinQty() * 2)) {
+                    setStyle("-fx-border-color: yellow; -fx-border-width: 2;");
+                } else {
+                    setStyle("");
+                }
+            }
+        });
+
+        refreshRestockReport();
+
+        idColumn.setSortType(TableColumn.SortType.ASCENDING);
+        restockReportTable.getSortOrder().add(idColumn);
     }
 
     @FXML
-    private void refreshSalesPerHour() {
-
+    private void refreshRestockReport() {
+        restockItems.clear();
 
         Connection conn = connectDb();
         if (conn == null) {
-            System.out.println("Could not connect to the database.");
+            reportStatusLabel.setText("Could not connect to the database.");
             return;
         }
 
         try {
-            // THIS EXAMPLE IS FROM OTHER FILE
-            // Statement stmt = conn.createStatement();
-            // String selectSalesPerHourStatement = "SELECT EXTRACT(HOUR FROM created_at)::int AS sale_hour, COUNT(*) as order_count, SUM(order_total) AS total_sales FROM orders WHERE order_status = 'paid' AND created_at::date = CURRENT_DATE GROUP BY sale_hour ORDER BY sale_hour";
-            // ResultSet result = stmt.executeQuery(selectSalesPerHourStatement);
-            // while (result.next()) {
-            //     int orders = result.getInt("order_count");
-            //     double sales = result.getDouble("total_sales");
-            //     hourItems.add(new HourRow(result.getInt("sale_hour"), sales, orders));
-            // }
-            // System.out.println("Loaded " + hourItems.size() + " hours of sales");
+            Statement stmt = conn.createStatement();
+            String selectRestockReportStatement =
+                    "SELECT i.ingredient_id, i.ingredient_name, i.quantity_in_stock, " +
+                    "i.expiry_date, i.storage_type, i.min_qty_on_hand FROM ingredients AS i";
+            ResultSet result = stmt.executeQuery(selectRestockReportStatement);
+            while (result.next()) {
+                int ingredientId = result.getInt("ingredient_id");
+                String ingredientName = result.getString("ingredient_name");
+                double qtyInStock = result.getDouble("quantity_in_stock");
+                String expiryDate = result.getString("expiry_date").substring(0, 10);
+                String storageType = result.getString("storage_type");
+                double minQtyOnHand = result.getDouble("min_qty_on_hand");
+
+                // (int itemId, String itemName, double itemQty, String itemExpiry, String storageType, double itemMinQty)
+                restockItems.add(new RestockRow(ingredientId, ingredientName, qtyInStock, expiryDate, storageType, minQtyOnHand));
+            }
+            System.out.println("Loaded " + restockItems.size() + " items");
 
             result.close();
             stmt.close();
         } catch (Exception e) {
-            // System.out.println("Error loading sales per hour:\n" + e.getMessage());
-            // reportStatusLabel.setText("Error loading sales per hour.");
+            System.out.println("Error loading restock report:\n" + e.getMessage());
+            reportStatusLabel.setText("Error loading restock report.");
         } finally {
             try {
                 conn.close();

@@ -93,11 +93,14 @@
                   <Font size="26.0" />
                </font>
             </Text>
-            <TableView fx:id="restockReportTable" layoutX="14.0" layoutY="86.0" prefHeight="276.0" prefWidth="614.0">
+            <TableView fx:id="restockReportTable" layoutX="14.0" layoutY="86.0" prefHeight="320.0" prefWidth="770.0">
               <columns>
-                <TableColumn fx:id="itemColumn" prefWidth="90.0" text="Item" />
-                <TableColumn fx:id="qtyColumn" minWidth="0.0" prefWidth="266.0" text="Qty Left" />
-                  <TableColumn fx:id="expiryColumn" prefWidth="257.0" text="Expiry Date" />
+                <TableColumn fx:id="idColumn" prefWidth="80.0" text="Item ID" />
+                <TableColumn fx:id="itemNameColumn" prefWidth="120.0" text="Item Name" />
+                <TableColumn fx:id="itemQtyColumn" minWidth="0.0" prefWidth="90.0" text="Qty Left" />
+                <TableColumn fx:id="itemMinQtyColumn" minWidth="0.0" prefWidth="90.0" text="Min Qty" />
+                <TableColumn fx:id="itemExpiryColumn" prefWidth="150.0" text="Expiry Date" />
+                <TableColumn fx:id="storageTypeColumn" prefWidth="120.0" text="Storage Type" />
               </columns>
             </TableView>
             <Button fx:id="BackButton" layoutX="573.0" layoutY="14.0" mnemonicParsing="false" onAction="#goBack" text="Back" />
