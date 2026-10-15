@@ -46,7 +46,8 @@ CREATE TABLE ingredients (
     ingredient_cost FLOAT,
     expiry_date TIMESTAMPTZ,
     min_qty_on_hand FLOAT,
-    measurement_units VARCHAR(20)
+    measurement_units VARCHAR(20),
+    shelf_life_days INT
 );
 
 CREATE TABLE order_details (
