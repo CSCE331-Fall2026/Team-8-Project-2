@@ -66,9 +66,8 @@ public final class MenuCatalog {
     Map<Category, List<MenuItem>> loaded = emptyCatalog();
     try {
       Statement stmt = conn.createStatement();
-      // TODO: the live DB column is misspelled "meu_item_type"; switch back once it's renamed
       String query =
-          "SELECT menu_item_id, menu_item_name, meu_item_type AS menu_item_type " +
+          "SELECT menu_item_id, menu_item_name, menu_item_type " +
           "FROM menu_items " +
           "WHERE active = TRUE " +
           "ORDER BY menu_item_id";
