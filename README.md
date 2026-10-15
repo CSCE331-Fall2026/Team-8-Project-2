@@ -162,6 +162,7 @@ This is another join table that bridges the many-to-many relation of many menu i
 - expiry_date: The day any given item is expected to expire.
 - min_qty_on_hand: The minimum amount of stock for an ingredient before it should be restocked.
 - measurement_units: Units of measurement that the item is tracked in (servings, pounds, ...)
+- shelf_life_days: Time in days that a given ingredient lasts
 
 For the manager, knowing the quantity in stock, as well as the storage type of any given item can help in managing an item. The system can also allow for the manager to be notified of products that need to be restocked.
 
@@ -268,3 +269,41 @@ FXML
 - No lines of space between lines of code.
 
 \*Also has Cashier.fxml's code pasted here. The output was just the reformatted Cashier.fxml
+
+### Prompt Used to Fix Sorting Bug in RestockReportController
+
+How can I make the table filter its ordering properly? when I run the GUI I am 
+able to click the field names, but it does not sort as expected
+
+```
+What's going wrong
+
+┌───────────────┬───────────────┬────────────────────────────────────────┐
+│    Column     │    Values     │             Sorted as text             │
+├───────────────┼───────────────┼────────────────────────────────────────┤
+│ ID            │ 2, 10, 9      │ "10", "2", "9"                         │
+├───────────────┼───────────────┼────────────────────────────────────────┤
+│ Qty / Min Qty │ 5.0, 12.5,    │ "100.0", "12.5", "5.0"                 │
+│               │ 100.0         │                                        │
+├───────────────┼───────────────┼────────────────────────────────────────┤
+│ Name, Storage │ text          │ sorts correctly                        │
+│  Type         │               │                                        │
+├───────────────┼───────────────┼────────────────────────────────────────┤
+│ Expiry        │ YYYY-MM-DD    │ sorts correctly, since ISO dates order │
+│               │               │  the same as text                      │
+└───────────────┴───────────────┴────────────────────────────────────────┘
+
+So name, storage type and expiry already work. ID, qty and min qty are the broken ones.
+
+Fix: give each numeric column a comparator (smallest change)
+
+Keep the String columns and tell them how to compare. In initialize():
+
+idColumn.setComparator(Comparator.comparingInt(Integer::parseInt));
+itemQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
+itemMinQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
+
+Each comparator receives the displayed strings, parses them back to numbers, and compares those. 
+It needs import java.util.Comparator;. It works because those cells only ever contain plain numbers. 
+If a cell could hold something unparseable, such as an empty string, parseInt would throw an exception during sorting.
+```
