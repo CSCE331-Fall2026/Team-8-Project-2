@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.text.Text;
 
+
 public class ManagerMenuController {
 
   // ===================== INVENTORY SUMMARY =====================
@@ -70,6 +71,7 @@ public class ManagerMenuController {
   private void initialize() {
 
     getStatus();
+
   }
 
   @FXML

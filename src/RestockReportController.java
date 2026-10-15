@@ -59,8 +59,8 @@ public class RestockReportController {
             // }
             // System.out.println("Loaded " + hourItems.size() + " hours of sales");
 
-            result.close();
-            stmt.close();
+            // result.close();
+            // stmt.close();
         } catch (Exception e) {
             // System.out.println("Error loading sales per hour:\n" + e.getMessage());
             // reportStatusLabel.setText("Error loading sales per hour.");
