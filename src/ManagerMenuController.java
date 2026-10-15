@@ -103,7 +103,7 @@ public class ManagerMenuController {
 
   @FXML
   private void openRestockReport(ActionEvent event) {
-    String fxmlPath = ""; // TODO: fill in
+    String fxmlPath = "fxml/restock_report.fxml";
     loadScreen(event, fxmlPath);
   }
 
