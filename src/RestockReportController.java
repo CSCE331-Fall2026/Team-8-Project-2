@@ -24,13 +24,17 @@ public class RestockReportController {
     @FXML
     private TableColumn<RestockRow, String> itemNameColumn;
     @FXML
+    private TableColumn<RestockRow, String> storageTypeColumn;
+    @FXML
     private TableColumn<RestockRow, String> itemQtyColumn;
     @FXML
     private TableColumn<RestockRow, String> itemMinQtyColumn;
     @FXML
     private TableColumn<RestockRow, String> itemExpiryColumn;
     @FXML
-    private TableColumn<RestockRow, String> storageTypeColumn;
+    private TableColumn<RestockRow, String> shelfLifeColumn;
+    @FXML
+    private TableColumn<RestockRow, String> timeTilExpiryColumn;
     @FXML
     private ChoiceBox<StorageType> storageTypePicker;
     @FXML
@@ -42,7 +46,9 @@ public class RestockReportController {
             double itemQty,
             String itemExpiry,
             String storageType,
-            double itemMinQty
+            double itemMinQty,
+            int shelfLife,
+            int timeTilExpiry
     ) { }
 
     private enum StorageType {
@@ -104,18 +110,28 @@ public class RestockReportController {
         itemMinQtyColumn.setCellValueFactory(
                 cell -> new SimpleStringProperty(String.valueOf(cell.getValue().itemMinQty()))
         );
+        shelfLifeColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.valueOf(cell.getValue().shelfLife()))
+        );
+        timeTilExpiryColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(String.valueOf(cell.getValue().timeTilExpiry()))
+        );
 
         idColumn.setComparator(Comparator.comparingInt(Integer::parseInt));
         itemQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
         itemMinQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
+        shelfLifeColumn.setComparator(Comparator.comparingInt(Integer::parseInt));
+        timeTilExpiryColumn.setComparator(Comparator.comparingInt(Integer::parseInt));
 
         restockReportTable.setRowFactory(tableView -> new TableRow<>() {
             @Override
             protected void updateItem(RestockRow row, boolean empty) {
                 super.updateItem(row, empty);
-                if (!empty && row != null && row.itemQty() <= (row.itemMinQty() * 1.25)) {
+                if (empty || row == null) {
+                    setStyle("");
+                } else if (row.itemQty() <= (row.itemMinQty() * 1.25) || row.timeTilExpiry() <= 2) {
                     setStyle("-fx-border-color: red; -fx-border-width: 2;");
-                } else if (!empty && row != null && row.itemQty() <= (row.itemMinQty() * 2)) {
+                } else if (row.itemQty() <= (row.itemMinQty() * 2) || row.timeTilExpiry() <= 7) {
                     setStyle("-fx-border-color: yellow; -fx-border-width: 2;");
                 } else {
                     setStyle("");
@@ -142,8 +158,8 @@ public class RestockReportController {
         try {
             Statement stmt = conn.createStatement();
             String selectRestockReportStatement =
-                    "SELECT i.ingredient_id, i.ingredient_name, i.quantity_in_stock, " +
-                    "i.expiry_date, i.storage_type, i.min_qty_on_hand FROM ingredients AS i";
+                    "SELECT i.ingredient_id, i.ingredient_name, i.quantity_in_stock, i.expiry_date, i.storage_type, " +
+                    "i.min_qty_on_hand, i.shelf_life_days, (i.expiry_date::DATE - CURRENT_DATE) AS calc_rem_time FROM ingredients AS i";
             ResultSet result = stmt.executeQuery(selectRestockReportStatement);
             while (result.next()) {
                 int ingredientId = result.getInt("ingredient_id");
@@ -152,9 +168,18 @@ public class RestockReportController {
                 String expiryDate = result.getString("expiry_date").substring(0, 10);
                 String storageType = result.getString("storage_type");
                 double minQtyOnHand = result.getDouble("min_qty_on_hand");
+                int shelfLife = result.getInt("shelf_life_days");
+                int timeTilExpiry = Math.max(result.getInt("calc_rem_time"), 0);
 
-                // (int itemId, String itemName, double itemQty, String itemExpiry, String storageType, double itemMinQty)
-                restockItems.add(new RestockRow(ingredientId, ingredientName, qtyInStock, expiryDate, storageType, minQtyOnHand));
+                restockItems.add(new RestockRow(ingredientId,
+                        ingredientName,
+                        qtyInStock,
+                        expiryDate,
+                        storageType,
+                        minQtyOnHand,
+                        shelfLife,
+                        timeTilExpiry
+                ));
             }
             System.out.println("Loaded " + restockItems.size() + " items");
 
