@@ -92,3 +92,5 @@ Fixed issues pointed out during the Phase 3 demo
 Added new appetizer combo feature to database.
 
 Fixed spelling regarding menu_item_type.
+
+Added new column to ingredients: shelf_life_days
