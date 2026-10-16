@@ -67,7 +67,7 @@ public final class MenuCatalog {
     try {
       Statement stmt = conn.createStatement();
       String query =
-          "SELECT menu_item_id, menu_item_name, menu_item_type AS menu_item_type " +
+          "SELECT menu_item_id, menu_item_name, menu_item_type " +
           "FROM menu_items " +
           "WHERE active = TRUE " +
           "ORDER BY menu_item_id";

@@ -180,7 +180,20 @@ def generate_menu_items():
     ]
 
 
+def generate_static_rows():
+    menu_items = generate_menu_items()
+    combos = generate_combos()
+    menu_item_details_rows = generate_menu_item_details_rows(menu_items)
+
+    return {
+        "menu_items": menu_items,
+        "combos": combos,
+        "menu_item_details_rows": menu_item_details_rows,
+    }
+
+
 def build_ingredient_rows():
+    now = datetime.now()
     ingredient_rows = []
     for ingredient_id, name, quantity_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units in INGREDIENTS:
         ingredient_rows.append(
@@ -191,14 +204,28 @@ def build_ingredient_rows():
                 "storage_type": storage_type,
                 "ingredient_cost": round(ingredient_cost + random.uniform(-0.15, 0.35), 2),
                 "expiry_date": random_datetime(
-                    datetime(2025, 1, 1),
-                    datetime(2026, 12, 31),
+                    now + timedelta(days=1),
+                    now + timedelta(days=730),
                 ),
                 "min_qty_on_hand": min_qty_on_hand,
                 "measurement_units": measurement_units,
             }
         )
     return ingredient_rows
+
+
+def generate_dynamic_rows(order_count, combos):
+    ingredient_rows = build_ingredient_rows()
+    orders = generate_orders(order_count)
+    order_detail_rows = generate_order_details(orders, combos)
+    combo_detail_rows = generate_combo_details(order_detail_rows, combos)
+
+    return {
+        "ingredient_rows": ingredient_rows,
+        "orders": orders,
+        "order_detail_rows": order_detail_rows,
+        "combo_detail_rows": combo_detail_rows,
+    }
 
 
 def generate_menu_item_details_rows(menu_items):
@@ -315,13 +342,8 @@ def generate_order_details(orders, combos):
 
 
 def build_sql_script(order_count=10):
-    menu_items = generate_menu_items()
-    ingredient_rows = build_ingredient_rows()
-    combos = generate_combos()
-    orders = generate_orders(order_count)
-    menu_item_details_rows = generate_menu_item_details_rows(menu_items)
-    order_detail_rows = generate_order_details(orders, combos)
-    combo_detail_rows = generate_combo_details(order_detail_rows, combos)
+    static_rows = generate_static_rows()
+    dynamic_rows = generate_dynamic_rows(order_count, static_rows["combos"])
 
     sql_script = ""
     sql_script += build_insert_sql(
@@ -329,7 +351,7 @@ def build_sql_script(order_count=10):
         ["menu_item_id", "menu_item_name", "premium_charge"],
         [
             (row["menu_item_id"], row["menu_item_name"], row["premium_charge"])
-            for row in menu_items
+            for row in static_rows["menu_items"]
         ],
     )
     sql_script += build_insert_sql(
@@ -346,7 +368,7 @@ def build_sql_script(order_count=10):
                 row["min_qty_on_hand"],
                 row["measurement_units"],
             )
-            for row in ingredient_rows
+            for row in dynamic_rows["ingredient_rows"]
         ],
     )
     sql_script += build_insert_sql(
@@ -359,7 +381,7 @@ def build_sql_script(order_count=10):
                 row["ingredient_id"],
                 row["ingredient_quantity"],
             )
-            for row in menu_item_details_rows
+            for row in static_rows["menu_item_details_rows"]
         ],
     )
     sql_script += build_insert_sql(
@@ -367,7 +389,7 @@ def build_sql_script(order_count=10):
         ["combo_id", "combo_name", "combo_price"],
         [
             (row["combo_id"], row["combo_name"], row["combo_price"])
-            for row in combos
+            for row in static_rows["combos"]
         ],
     )
     sql_script += build_insert_sql(
@@ -382,7 +404,7 @@ def build_sql_script(order_count=10):
                 row["payment_method"],
                 row["order_total"],
             )
-            for row in orders
+            for row in dynamic_rows["orders"]
         ],
     )
     sql_script += build_insert_sql(
@@ -390,7 +412,7 @@ def build_sql_script(order_count=10):
         ["order_detail_id", "combo_id", "order_id", "order_qty"],
         [
             (row["order_detail_id"], row["combo_id"], row["order_id"], row["order_qty"])
-            for row in order_detail_rows
+            for row in dynamic_rows["order_detail_rows"]
         ],
     )
     sql_script += build_insert_sql(
@@ -403,7 +425,7 @@ def build_sql_script(order_count=10):
                 row["order_detail_id"],
                 row["servings"],
             )
-            for row in combo_detail_rows
+            for row in dynamic_rows["combo_detail_rows"]
         ],
     )
 

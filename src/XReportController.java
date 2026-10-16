@@ -20,14 +20,12 @@ public class XReportController {
     @FXML
     private TableColumn<HourRow, String> hourColumn;
     @FXML
-    private TableColumn<HourRow, String> salesColumn; // "C2" in the FXML, rename once defined
+    private TableColumn<HourRow, String> salesColumn;
     @FXML
-    private TableColumn<HourRow, String> dollarsColumn; // "C2" in the FXML, rename once defined
+    private TableColumn<HourRow, String> dollarsColumn;
     @FXML
     private Label reportStatusLabel;
 
-    // TODO: adjust fields once the second column is defined (total sales, order
-    // count, etc.)
     private record HourRow(int hour, double sales, int orders) {
     }
 
