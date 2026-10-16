@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.text.Text;
 
+
 public class ManagerMenuController {
 
   // ===================== INVENTORY SUMMARY =====================
@@ -20,7 +21,7 @@ public class ManagerMenuController {
   private Connection connectDb() {
 
     try {
-      // Get database creditials
+      // Get database credentials
       dbSetup my = new dbSetup();
 
       // Build the connection
@@ -70,6 +71,7 @@ public class ManagerMenuController {
   private void initialize() {
 
     getStatus();
+
   }
 
   @FXML

@@ -15,39 +15,84 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import java.sql.*;
 import java.util.Optional;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.ListView;
+import javafx.scene.control.cell.CheckBoxListCell;
+import java.util.List;
+import java.util.ArrayList;
+
+
 
 public class InventoryController {
+  @FXML
+  private TextField newMenuItemNameField;
+  @FXML
+  private ListView<IngredientOption> ingredientListView;
+  private final ObservableList<IngredientOption> ingredientOptions = FXCollections.observableArrayList();
+  private record IngredientOption(int id, String name, BooleanProperty selected) {
+    @Override
+    public String toString() {
+      return name;
+    } // CheckBoxListCell uses this for the label
+  }
 
+  @FXML
+  private TableView<InventoryRow> inventoryTable;
+  @FXML
+  private TableColumn<InventoryRow, String> inventoryNameColumn;
+  @FXML
+  private TableColumn<InventoryRow, String> inventoryPercentColumn;
+  @FXML
+  private TableColumn<InventoryRow, String> inventoryAmountColumn;
+  @FXML
+  private TableColumn<InventoryRow, String> inventoryUnitsColumn;
+  @FXML
+  private TableColumn<InventoryRow, String> inventoryStorageColumn;
+  @FXML
+  private TextField newQuantityField;
+  @FXML
+  private Button updateQuantityButton;
+  @FXML
+  private Label inventoryStatusLabel;
 
-  @FXML private TableView<InventoryRow> inventoryTable;
-  @FXML private TableColumn<InventoryRow, String> inventoryNameColumn;
-  @FXML private TableColumn<InventoryRow, String> inventoryPercentColumn;
-  @FXML private TableColumn<InventoryRow, String> inventoryAmountColumn;
-  @FXML private TableColumn<InventoryRow, String> inventoryUnitsColumn;
-  @FXML private TableColumn<InventoryRow, String> inventoryStorageColumn;
-  @FXML private TextField newQuantityField;
-  @FXML private Button updateQuantityButton;
-  @FXML private Label inventoryStatusLabel;
+  @FXML
+  private TableView<ComboRow> comboTable;
+  @FXML
+  private TableColumn<ComboRow, String> comboNameColumn;
+  @FXML
+  private TableColumn<ComboRow, String> comboPriceColumn;
+  @FXML
+  private TextField newComboPriceField;
+  @FXML
+  private Button updateComboPriceButton;
+  @FXML
+  private TextField newPremiumPriceField;
+  @FXML
+  private Button updatePremiumButton;
+  @FXML
+  private TableView<MenuItemRow> menuItemTable;
+  @FXML
+  private TableColumn<MenuItemRow, String> menuItemNameColumn;
+  @FXML
+  private TableColumn<MenuItemRow, String> menuItemPremiumColumn;
+  @FXML
+  private TableColumn<MenuItemRow, String> menuItemActiveColumn;
+  @FXML
+  private Button discontinueMenuItemButton;
+  @FXML
+  private Button reactivateMenuItemButton;
+  @FXML
+  private Label menuStatusLabel;
 
+  private record InventoryRow(int id, String name, double quantity, String units, String storage) {
+  }
 
-  @FXML private TableView<ComboRow> comboTable;
-  @FXML private TableColumn<ComboRow, String> comboNameColumn;
-  @FXML private TableColumn<ComboRow, String> comboPriceColumn;
-  @FXML private TextField newComboPriceField;
-  @FXML private Button updateComboPriceButton;
-  @FXML private TextField newPremiumPriceField;
-  @FXML private Button updatePremiumButton;
-  @FXML private TableView<MenuItemRow> menuItemTable;
-  @FXML private TableColumn<MenuItemRow, String> menuItemNameColumn;
-  @FXML private TableColumn<MenuItemRow, String> menuItemPremiumColumn;
-  @FXML private TableColumn<MenuItemRow, String> menuItemActiveColumn;
-  @FXML private Button discontinueMenuItemButton;
-  @FXML private Button reactivateMenuItemButton;
-  @FXML private Label menuStatusLabel;
+  private record ComboRow(int id, String name, double price) {
+  }
 
-  private record InventoryRow(int id, String name, double quantity, String units, String storage) {}
-  private record ComboRow(int id, String name, double price) {}
-  private record MenuItemRow(int id, String name, double premiumCharge, boolean active) {}
+  private record MenuItemRow(int id, String name, double premiumCharge, boolean active) {
+  }
 
   private final ObservableList<InventoryRow> inventoryItems = FXCollections.observableArrayList();
   private final ObservableList<ComboRow> comboItems = FXCollections.observableArrayList();
@@ -59,8 +104,8 @@ public class InventoryController {
     inventoryTable.setItems(inventoryItems);
     inventoryNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().name()));
     // % Remaining intentionally left blank until it is defined (no value factory)
-    inventoryAmountColumn.setCellValueFactory(cell ->
-        new SimpleStringProperty(String.format("%.2f", cell.getValue().quantity())));
+    inventoryAmountColumn
+        .setCellValueFactory(cell -> new SimpleStringProperty(String.format("%.2f", cell.getValue().quantity())));
     inventoryUnitsColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().units()));
     inventoryStorageColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().storage()));
 
@@ -72,11 +117,14 @@ public class InventoryController {
       }
     });
 
+    ingredientListView.setItems(ingredientOptions);
+    ingredientListView.setCellFactory(CheckBoxListCell.forListView(IngredientOption::selected));
+    loadIngredientOptions();
 
     comboTable.setItems(comboItems);
     comboNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().name()));
-    comboPriceColumn.setCellValueFactory(cell ->
-        new SimpleStringProperty("$" + String.format("%.2f", cell.getValue().price())));
+    comboPriceColumn
+        .setCellValueFactory(cell -> new SimpleStringProperty("$" + String.format("%.2f", cell.getValue().price())));
 
     updateComboPriceButton.setDisable(true);
     comboTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -86,13 +134,12 @@ public class InventoryController {
       }
     });
 
-
     menuItemTable.setItems(menuItems);
     menuItemNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().name()));
-    menuItemPremiumColumn.setCellValueFactory(cell ->
-        new SimpleStringProperty("$" + String.format("%.2f", cell.getValue().premiumCharge())));
-    menuItemActiveColumn.setCellValueFactory(cell ->
-        new SimpleStringProperty(cell.getValue().active() ? "Active" : "Discontinued"));
+    menuItemPremiumColumn.setCellValueFactory(
+        cell -> new SimpleStringProperty("$" + String.format("%.2f", cell.getValue().premiumCharge())));
+    menuItemActiveColumn
+        .setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().active() ? "Active" : "Discontinued"));
 
     discontinueMenuItemButton.setDisable(true);
     reactivateMenuItemButton.setDisable(true);
@@ -107,6 +154,39 @@ public class InventoryController {
 
   // ===================== INVENTORY =====================
 
+  private void loadIngredientOptions() {
+    ingredientOptions.clear();
+
+    Connection conn = connectDb();
+    if (conn == null) {
+      menuStatusLabel.setText("Could not connect to the database.");
+      return;
+    }
+
+    try {
+      Statement stmt = conn.createStatement();
+      ResultSet result = stmt.executeQuery(
+          "SELECT ingredient_id, ingredient_name FROM ingredients ORDER BY ingredient_name");
+      while (result.next()) {
+        ingredientOptions.add(new IngredientOption(
+            result.getInt("ingredient_id"),
+            result.getString("ingredient_name"),
+            new SimpleBooleanProperty(false)));
+      }
+      result.close();
+      stmt.close();
+    } catch (Exception e) {
+      System.out.println("Error loading ingredient options:\n" + e.getMessage());
+      menuStatusLabel.setText("Error loading ingredients.");
+    } finally {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   @FXML
   private void refreshInventory() {
     inventoryItems.clear();
@@ -119,34 +199,31 @@ public class InventoryController {
 
     try {
       Statement stmt = conn.createStatement();
-      String selectInventoryStatement =
-        "SELECT ingredient_id, ingredient_name, quantity_in_stock, measurement_units, storage_type " +
-        "FROM ingredients " +
-        "ORDER BY ingredient_name";
+      String selectInventoryStatement = "SELECT ingredient_id, ingredient_name, quantity_in_stock, measurement_units, storage_type "
+          +
+          "FROM ingredients " +
+          "ORDER BY ingredient_name";
       ResultSet result = stmt.executeQuery(selectInventoryStatement);
 
       while (result.next()) {
         inventoryItems.add(new InventoryRow(
-          result.getInt("ingredient_id"),
-          result.getString("ingredient_name"),
-          result.getDouble("quantity_in_stock"),
-          result.getString("measurement_units"),
-          result.getString("storage_type")));
+            result.getInt("ingredient_id"),
+            result.getString("ingredient_name"),
+            result.getDouble("quantity_in_stock"),
+            result.getString("measurement_units"),
+            result.getString("storage_type")));
       }
       System.out.println("Loaded " + inventoryItems.size() + " ingredients");
 
       result.close();
       stmt.close();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error loading inventory:\n" + e.getMessage());
       inventoryStatusLabel.setText("Error loading inventory.");
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -163,8 +240,7 @@ public class InventoryController {
     double newQuantity;
     try {
       newQuantity = Double.parseDouble(newQuantityField.getText().trim());
-    }
-    catch (NumberFormatException e) {
+    } catch (NumberFormatException e) {
       inventoryStatusLabel.setText("Enter a valid number for the new amount.");
       return;
     }
@@ -181,26 +257,22 @@ public class InventoryController {
 
     try {
       Statement stmt = conn.createStatement();
-      String updateQuantityStatement =
-        "UPDATE ingredients SET quantity_in_stock = " + newQuantity + " " +
-        "WHERE ingredient_id = " + selected.id();
+      String updateQuantityStatement = "UPDATE ingredients SET quantity_in_stock = " + newQuantity + " " +
+          "WHERE ingredient_id = " + selected.id();
       stmt.executeUpdate(updateQuantityStatement);
       stmt.close();
 
       inventoryStatusLabel.setText("Updated " + selected.name() + " to " +
-        String.format("%.2f", newQuantity) + " " + (selected.units() == null ? "" : selected.units()));
+          String.format("%.2f", newQuantity) + " " + (selected.units() == null ? "" : selected.units()));
       newQuantityField.clear();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error updating inventory:\n" + e.getMessage());
       inventoryStatusLabel.setText("Error updating inventory.");
       return;
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -209,6 +281,27 @@ public class InventoryController {
   }
 
   // ======================== MENU ========================
+  @FXML
+  private void addMenuItem() {
+    String name = newMenuItemNameField.getText().trim();
+    if (name.isEmpty()) {
+      menuStatusLabel.setText("Enter a name for the menu item.");
+      return;
+    }
+
+    List<IngredientOption> chosen = new ArrayList<>();
+    for (IngredientOption option : ingredientOptions) {
+      if (option.selected().get()) {
+        chosen.add(option);
+      }
+    }
+    if (chosen.isEmpty()) {
+      menuStatusLabel.setText("Select at least one ingredient.");
+      return;
+    }
+
+    // insert into menu_items, then one row per chosen ingredient (see below)
+  }
 
   @FXML
   private void refreshMenu() {
@@ -224,42 +317,37 @@ public class InventoryController {
     try {
       Statement stmt = conn.createStatement();
 
-      String selectCombosStatement =
-        "SELECT combo_id, combo_name, combo_price FROM combos ORDER BY combo_id";
+      String selectCombosStatement = "SELECT combo_id, combo_name, combo_price FROM combos ORDER BY combo_id";
       ResultSet comboResult = stmt.executeQuery(selectCombosStatement);
       while (comboResult.next()) {
         comboItems.add(new ComboRow(
-          comboResult.getInt("combo_id"),
-          comboResult.getString("combo_name"),
-          comboResult.getDouble("combo_price")));
+            comboResult.getInt("combo_id"),
+            comboResult.getString("combo_name"),
+            comboResult.getDouble("combo_price")));
       }
       comboResult.close();
 
-      String selectMenuItemsStatement =
-        "SELECT menu_item_id, menu_item_name, premium_charge, active " +
-        "FROM menu_items " +
-        "ORDER BY menu_item_name";
+      String selectMenuItemsStatement = "SELECT menu_item_id, menu_item_name, premium_charge, active " +
+          "FROM menu_items " +
+          "ORDER BY menu_item_name";
       ResultSet itemResult = stmt.executeQuery(selectMenuItemsStatement);
       while (itemResult.next()) {
         menuItems.add(new MenuItemRow(
-          itemResult.getInt("menu_item_id"),
-          itemResult.getString("menu_item_name"),
-          itemResult.getDouble("premium_charge"),
-          itemResult.getBoolean("active")));
+            itemResult.getInt("menu_item_id"),
+            itemResult.getString("menu_item_name"),
+            itemResult.getDouble("premium_charge"),
+            itemResult.getBoolean("active")));
       }
       itemResult.close();
 
       stmt.close();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error loading menu:\n" + e.getMessage());
       menuStatusLabel.setText("Error loading menu.");
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -276,8 +364,7 @@ public class InventoryController {
     double newPrice;
     try {
       newPrice = Double.parseDouble(newComboPriceField.getText().trim());
-    }
-    catch (NumberFormatException e) {
+    } catch (NumberFormatException e) {
       menuStatusLabel.setText("Enter a valid number for the new price.");
       return;
     }
@@ -294,25 +381,21 @@ public class InventoryController {
 
     try {
       Statement stmt = conn.createStatement();
-      String updateComboPriceStatement =
-        "UPDATE combos SET combo_price = " + newPrice + " " +
-        "WHERE combo_id = " + selected.id();
+      String updateComboPriceStatement = "UPDATE combos SET combo_price = " + newPrice + " " +
+          "WHERE combo_id = " + selected.id();
       stmt.executeUpdate(updateComboPriceStatement);
       stmt.close();
 
       menuStatusLabel.setText("Updated " + selected.name() + " to $" + String.format("%.2f", newPrice));
       newComboPriceField.clear();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error updating combo price:\n" + e.getMessage());
       menuStatusLabel.setText("Error updating combo price.");
       return;
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -320,7 +403,7 @@ public class InventoryController {
     refreshMenu();
   }
 
-    @FXML
+  @FXML
   private void updatePremiumPrice() {
     MenuItemRow selected = menuItemTable.getSelectionModel().getSelectedItem();
     if (selected == null || !selected.active()) {
@@ -331,8 +414,7 @@ public class InventoryController {
     double newPrice;
     try {
       newPrice = Double.parseDouble(newPremiumPriceField.getText().trim());
-    }
-    catch (NumberFormatException e) {
+    } catch (NumberFormatException e) {
       menuStatusLabel.setText("Enter a valid number for the new price.");
       return;
     }
@@ -349,32 +431,27 @@ public class InventoryController {
 
     try {
       Statement stmt = conn.createStatement();
-      String updatePremiumPriceStatement =
-        "UPDATE menu_items SET premium_charge = " + newPrice + " " +
-        "WHERE menu_item_id = " + selected.id();
+      String updatePremiumPriceStatement = "UPDATE menu_items SET premium_charge = " + newPrice + " " +
+          "WHERE menu_item_id = " + selected.id();
       stmt.executeUpdate(updatePremiumPriceStatement);
       stmt.close();
 
       menuStatusLabel.setText("Updated " + selected.name() + " to $" + String.format("%.2f", newPrice));
       newPremiumPriceField.clear();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error updating combo price:\n" + e.getMessage());
       menuStatusLabel.setText("Error updating combo price.");
       return;
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
 
     refreshMenu();
   }
-
 
   @FXML
   private void discontinueMenuItem() {
@@ -384,8 +461,8 @@ public class InventoryController {
     }
 
     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-      "Discontinue \"" + selected.name() + "\"? It will no longer be available to order.",
-      ButtonType.YES, ButtonType.NO);
+        "Discontinue \"" + selected.name() + "\"? It will no longer be available to order.",
+        ButtonType.YES, ButtonType.NO);
     confirm.setHeaderText(null);
     Optional<ButtonType> choice = confirm.showAndWait();
     if (choice.isEmpty() || choice.get() != ButtonType.YES) {
@@ -399,26 +476,23 @@ public class InventoryController {
     }
 
     try {
-      // Soft delete: keeps the row so past combo_details still point at a valid menu item
+      // Soft delete: keeps the row so past combo_details still point at a valid menu
+      // item
       Statement stmt = conn.createStatement();
-      String discontinueStatement =
-        "UPDATE menu_items SET active = FALSE " +
-        "WHERE menu_item_id = " + selected.id();
+      String discontinueStatement = "UPDATE menu_items SET active = FALSE " +
+          "WHERE menu_item_id = " + selected.id();
       stmt.executeUpdate(discontinueStatement);
       stmt.close();
 
       menuStatusLabel.setText("Discontinued " + selected.name() + ".");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error discontinuing menu item:\n" + e.getMessage());
       menuStatusLabel.setText("Error discontinuing menu item.");
       return;
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -441,24 +515,20 @@ public class InventoryController {
 
     try {
       Statement stmt = conn.createStatement();
-      String reactivateStatement =
-        "UPDATE menu_items SET active = TRUE " +
-        "WHERE menu_item_id = " + selected.id();
+      String reactivateStatement = "UPDATE menu_items SET active = TRUE " +
+          "WHERE menu_item_id = " + selected.id();
       stmt.executeUpdate(reactivateStatement);
       stmt.close();
 
       menuStatusLabel.setText("Reactivated " + selected.name() + ".");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error reactivating menu item:\n" + e.getMessage());
       menuStatusLabel.setText("Error reactivating menu item.");
       return;
-    }
-    finally {
+    } finally {
       try {
         conn.close();
-      }
-      catch (SQLException e) {
+      } catch (SQLException e) {
         e.printStackTrace();
       }
     }
@@ -473,19 +543,19 @@ public class InventoryController {
       Parent root = fxmlLoader.load();
       Node source = (Node) event.getSource();
       source.getScene().setRoot(root);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error returning to main screen:\n" + e.getMessage());
       e.printStackTrace();
     }
   }
 
   // database connection
-  private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; //database location
+  private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; // database location
+
   private Connection connectDb() {
 
     try {
-      // Get database creditials
+      // Get database credentials
       dbSetup my = new dbSetup();
 
       // Build the connection
@@ -493,8 +563,7 @@ public class InventoryController {
       Connection conn = DriverManager.getConnection(DB_URL, my.user, my.pswd);
       return conn;
 
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println("Error connecting to database:\n" + e.getMessage());
       e.printStackTrace();
       return null;

@@ -331,7 +331,7 @@ public class CashierController {
   private Connection connectDb() {
 
     try {
-      // Get database creditials
+      // Get database credentials
       dbSetup my = new dbSetup();
  
       // Build the connection
