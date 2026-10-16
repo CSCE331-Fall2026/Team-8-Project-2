@@ -40,6 +40,7 @@ public class RestockReportController {
     @FXML
     private Label reportStatusLabel;
 
+    // Helpers and Types
     private record RestockRow (
             int itemId,
             String itemName,
@@ -71,22 +72,34 @@ public class RestockReportController {
         public String getDbLabel() { return dbLabel; }
     }
 
+    private boolean isCritical(RestockRow row) {
+        return row.itemQty() <= row.itemMinQty() || row.timeTilExpiry() <= 0;
+    }
+
+    private boolean isWarning(RestockRow row) {
+        return row.itemQty() <= row.itemMinQty() * 1.5 || row.timeTilExpiry() <= 7;
+    }
+
     private void applyFilter() {
         StorageType selected = storageTypePicker.getValue();
 
-        filteredItems.setPredicate(row ->
-                selected == null || selected == StorageType.ALL || selected.getDbLabel().equalsIgnoreCase(row.storageType()));
+        filteredItems.setPredicate(row -> {
+              boolean rowMatch = selected == null || selected == StorageType.ALL || selected.getDbLabel().equalsIgnoreCase(row.storageType());
+              return rowMatch && (isCritical(row) || isWarning(row));
+        });
     }
 
+    // Table Generation Logic
     private final ObservableList<RestockRow> restockItems = FXCollections.observableArrayList();
     private FilteredList<RestockRow> filteredItems;
 
     @FXML
     private void initialize() {
-        filteredItems = new FilteredList<>(restockItems, row -> true);
+        filteredItems = new FilteredList<>(restockItems, row -> isCritical(row) || isWarning(row));
         SortedList<RestockRow> sortedItems = new SortedList<>(filteredItems);
         sortedItems.comparatorProperty().bind(restockReportTable.comparatorProperty());
         restockReportTable.setItems(sortedItems);
+        restockReportTable.setPlaceholder(new Label("No items need to be restocked"));
 
         storageTypePicker.getItems().addAll(StorageType.values());
         storageTypePicker.setValue(StorageType.ALL);
@@ -129,12 +142,10 @@ public class RestockReportController {
                 super.updateItem(row, empty);
                 if (empty || row == null) {
                     setStyle("");
-                } else if (row.itemQty() <= (row.itemMinQty() * 1.25) || row.timeTilExpiry() <= 2) {
+                } else if (isCritical(row)) {
                     setStyle("-fx-border-color: red; -fx-border-width: 2;");
-                } else if (row.itemQty() <= (row.itemMinQty() * 2) || row.timeTilExpiry() <= 7) {
-                    setStyle("-fx-border-color: yellow; -fx-border-width: 2;");
                 } else {
-                    setStyle("");
+                    setStyle("-fx-border-color: yellow; -fx-border-width: 2;");
                 }
             }
         });
@@ -161,6 +172,7 @@ public class RestockReportController {
                     "SELECT i.ingredient_id, i.ingredient_name, i.quantity_in_stock, i.expiry_date, i.storage_type, " +
                     "i.min_qty_on_hand, i.shelf_life_days, (i.expiry_date::DATE - CURRENT_DATE) AS calc_rem_time FROM ingredients AS i";
             ResultSet result = stmt.executeQuery(selectRestockReportStatement);
+
             while (result.next()) {
                 int ingredientId = result.getInt("ingredient_id");
                 String ingredientName = result.getString("ingredient_name");
