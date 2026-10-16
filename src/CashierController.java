@@ -21,6 +21,7 @@ public class CashierController {
 
   @FXML private ListView<CartLine> cartList;
   @FXML private Button removeCartItemButton;
+  @FXML private Button editCartItemButton;
   @FXML private Label cartTotalLabel;
   @FXML private Separator buildSeparator;
   @FXML private VBox buildPane;
@@ -35,6 +36,7 @@ public class CashierController {
 
   private final ObservableList<CartLine> cartItems = FXCollections.observableArrayList();
   private BuildState build;
+  private int editIndex = -1;
 
   @FXML
   private void initialize() {
@@ -51,8 +53,11 @@ public class CashierController {
       }
     });
     removeCartItemButton.setDisable(true);
-    cartList.getSelectionModel().selectedItemProperty().addListener(
-        (obs, oldVal, newVal) -> removeCartItemButton.setDisable(newVal == null));
+    editCartItemButton.setDisable(true);
+    cartList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+      removeCartItemButton.setDisable(newVal == null);
+      editCartItemButton.setDisable(newVal == null);
+    });
     refreshCart();
     hideBuild();
   }
@@ -75,6 +80,20 @@ public class CashierController {
       cartItems.remove(index);
       refreshCart();
     }
+  }
+
+  @FXML
+  private void editSelectedCartItem() {
+    int index = cartList.getSelectionModel().getSelectedIndex();
+    if (index < 0) {
+      return;
+    }
+    CartLine line = cartItems.get(index);
+    beginBuild(line.type());
+    line.items().forEach(build::add);
+    rebuildItemButtons();
+    refreshBuildState();
+    editIndex = index;
   }
 
   @FXML
@@ -184,8 +203,14 @@ public class CashierController {
       return;
     }
 
-    for (int i = 0; i < orderQtySpinner.getValue(); i++) {
-      cartItems.add(new CartLine(build.type(), build.items(), build.cartLine(), 0f));
+    CartLine line = new CartLine(build.type(), build.items(), build.cartLine(), 0f);
+    int copies = orderQtySpinner.getValue();
+    if (editIndex >= 0) {
+      cartItems.set(editIndex, line);
+      copies--;
+    }
+    for (int i = 0; i < copies; i++) {
+      cartItems.add(line);
     }
     refreshCart();
     hideBuild();
@@ -227,6 +252,7 @@ public class CashierController {
       }
     }
     build = new BuildState(type);
+    editIndex = -1;
     buildTitleLabel.setText(type.displayName());
     orderQtySpinner.getValueFactory().setValue(1);
     rebuildItemButtons();
@@ -236,6 +262,7 @@ public class CashierController {
 
   private void hideBuild() {
     build = null;
+    editIndex = -1;
     itemRows.getChildren().clear();
     setBuildVisible(false);
   }
@@ -260,7 +287,7 @@ public class CashierController {
       for (MenuCatalog.MenuItem item : MenuCatalog.items(category)) {
         Label name = new Label(item.name());
         name.setPrefWidth(200);
-        Label count = new Label("0");
+        Label count = new Label(String.valueOf(build.countOf(item)));
         Button plus = new Button("+");
         Button minus = new Button("-");
         plus.setOnAction(e -> {

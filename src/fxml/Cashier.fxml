@@ -23,6 +23,7 @@
           <children>
             <Label text="Cart" />
             <Button fx:id="removeCartItemButton" onAction="#removeSelectedCartItem" text="Remove" />
+            <Button fx:id="editCartItemButton" onAction="#editSelectedCartItem" text="Edit" />
             <Button onAction="#clearCart" text="Clear" />
           </children>
         </HBox>
