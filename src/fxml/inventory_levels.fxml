@@ -37,6 +37,7 @@
                     <Font size="24.0" />
                   </font>
                 </Text>
+                        <ChoiceBox fx:id="storageTypePicker" onMouseClicked="#refreshInventory" prefWidth="150.0" />
 
                 <TableView fx:id="inventoryTable" VBox.vgrow="ALWAYS">
                   <columnResizePolicy>

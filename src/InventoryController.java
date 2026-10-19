@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -59,6 +60,9 @@ public class InventoryController {
   private Button updateQuantityButton;
   @FXML
   private Label inventoryStatusLabel;
+
+  @FXML 
+  private ChoiceBox storageTypePicker;
 
   @FXML
   private TableView<ComboRow> comboTable;
@@ -151,6 +155,7 @@ public class InventoryController {
       discontinueMenuItemButton.setDisable(newVal == null || !newVal.active());
       reactivateMenuItemButton.setDisable(newVal == null || newVal.active());
     });
+    storageTypePicker.getItems().addAll("freezer", "refrigerator", "pantry", "None");
 
     refreshInventory();
     refreshMenu();
@@ -203,10 +208,14 @@ public class InventoryController {
 
     try {
       Statement stmt = conn.createStatement();
-      String selectInventoryStatement = "SELECT ingredient_id, ingredient_name, quantity_in_stock, measurement_units, storage_type "
+      String filter = "";
+      if (storageTypePicker.getValue() != null && storageTypePicker.getValue() != "None")  {
+        filter = "WHERE storage_type = '" + storageTypePicker.getValue() +  "' ";
+      }
+      String selectInventoryStatement = "SELECT ingredient_id, ingredient_name, quantity_in_stock, measurement_units, storage_type"
           +
-          "FROM ingredients " +
-          "ORDER BY ingredient_name";
+          " FROM ingredients " + filter
+          + "ORDER BY ingredient_name";
       ResultSet result = stmt.executeQuery(selectInventoryStatement);
 
       while (result.next()) {
