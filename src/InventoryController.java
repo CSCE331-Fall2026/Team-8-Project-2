@@ -102,26 +102,6 @@ public class InventoryController {
   private record MenuItemRow(int id, String name, double premiumCharge, boolean active) {
   }
 
-  private enum StorageType {
-    ALL("All", null),
-    PANTRY("Pantry", "pantry"),
-    REFRIGERATOR("Refrigerator", "refrigerator"),
-    FREEZER("Freezer", "freezer");
-
-    StorageType(String storageLabel, String dbLabel) {
-      this.storageLabel = storageLabel;
-      this.dbLabel = dbLabel;
-    }
-
-    public final String storageLabel;
-    public final String dbLabel;
-
-    @Override
-    public String toString() { return storageLabel; }
-
-    public String getDbLabel() { return dbLabel; }
-  }
-
   private final ObservableList<InventoryRow> inventoryItems = FXCollections.observableArrayList();
   private final ObservableList<ComboRow> comboItems = FXCollections.observableArrayList();
   private final ObservableList<MenuItemRow> menuItems = FXCollections.observableArrayList();
