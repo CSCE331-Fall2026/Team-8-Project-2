@@ -80,12 +80,15 @@ TODO:
 Fleshed out Manager UI through button and feature functionality.
 - Implemented time-sales analysis for sales made throughout the day.
 - Buttons now lead to different parts of the view
+- Implemented views for all the features required (Restock Report, X-Change Report, Sales Report, Product Usage Report, Season Items)
+- Coded functionality for the views (one per teammate)
 
 #### Cashier side
 
 Fixed issues pointed out during the Phase 3 demo
-- Implemented menu items dynamically, previously hard-coded.
+- Implemented menu items dynamically, previously hard-coded, now causing active/inactive features to properly show within the view.
 - Added new Combo feature to account for appetizers.
+- Added editing items as a feature.
 
 #### Database Changes
 
@@ -94,3 +97,10 @@ Added new appetizer combo feature to database.
 Fixed spelling regarding menu_item_type.
 
 Added new column to ingredients: shelf_life_days
+
+#### General Changes
+
+Implemented the Javadoc as a guide for the software.
+- Hosted Javadoc on CloudFlare
+
+Performed an SQL Optimization Report on Sales Report view through the use of indexes.
