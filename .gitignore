@@ -1,6 +1,8 @@
 .DS_Store
 
 generated_data.sql
+generated_orders.sql
+generated_static_data.sql
 
 db_scripts.txt
 
