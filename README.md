@@ -78,6 +78,36 @@ Then open **Cashier** from the home screen to build bowls/plates into the cart. 
 
 More detail: [`src/README.md`](src/README.md).
 
+## Generate Javadocs
+
+Javadocs are generated from every Java source file under `src/` into the ignored
+`docs/javadocs/` directory. The generator uses the JavaFX SDK already required
+to compile the application and automatically checks `javafx-sdk-25/` and
+`javafx-sdk-27/` in the project root.
+
+Windows PowerShell:
+
+```powershell
+.\scripts\generate-javadocs.ps1
+```
+
+Linux / macOS:
+
+```bash
+bash scripts/generate-javadocs.sh
+```
+
+If the JavaFX SDK is installed elsewhere, set `JAVAFX_HOME` before running the
+script. For example, on PowerShell:
+
+```powershell
+$env:JAVAFX_HOME = "C:\path\to\javafx-sdk-25"
+.\scripts\generate-javadocs.ps1
+```
+
+Open `docs/javadocs/index.html` after generation to browse the API
+documentation.
+
 # Database Schema and Design
 
 No AI was used to critique our database.

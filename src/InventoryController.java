@@ -273,6 +273,9 @@ public class InventoryController {
       String updateQuantityStatement = "UPDATE ingredients SET quantity_in_stock = " + newQuantity + " " +
           "WHERE ingredient_id = " + selected.id();
       stmt.executeUpdate(updateQuantityStatement);
+      String updateExpDateStatement = "UPDATE ingredients SET expiry_date = CURRENT_DATE::DATE + shelf_life_days " +
+              "WHERE ingredient_id = " + selected.id();
+      stmt.executeUpdate(updateExpDateStatement);
       stmt.close();
 
       inventoryStatusLabel.setText("Updated " + selected.name() + " to " +
