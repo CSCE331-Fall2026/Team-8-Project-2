@@ -37,6 +37,9 @@ public class InventoryController {
     } // CheckBoxListCell uses this for the label
   }
 
+  // new menu item fx:ids are newMenuItemXXXX
+  // new ingredient fx:ids are newIngredientXXXX
+
   @FXML
   private TableView<InventoryRow> inventoryTable;
   @FXML
