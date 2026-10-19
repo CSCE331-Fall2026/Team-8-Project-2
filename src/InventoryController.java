@@ -29,6 +29,26 @@ public class InventoryController {
   @FXML
   private TextField newMenuItemNameField;
   @FXML
+  private TextField newIngredientName;
+  @FXML
+  private TextField newIngredientQty;
+  @FXML
+  private ChoiceBox<String> newIngredientStorageType;
+  @FXML
+  private TextField newIngredientUnits;
+  @FXML
+  private TextField newIngredientMinQty;
+  @FXML
+  private TextField newIngredientShelfLife;
+  @FXML
+  private TextField newMenuItemPremiumCharge;
+  @FXML
+  private TextField newMenuItemServingsUsed;
+  @FXML
+  private ChoiceBox<String> newMenuItemType;
+  @FXML
+  private Label seasonalStatusLabel;
+  @FXML
   private ListView<IngredientOption> ingredientListView;
   private final ObservableList<IngredientOption> ingredientOptions = FXCollections.observableArrayList();
   private record IngredientOption(int id, String name, BooleanProperty selected) {
@@ -156,6 +176,10 @@ public class InventoryController {
       reactivateMenuItemButton.setDisable(newVal == null || newVal.active());
     });
     storageTypePicker.getItems().addAll("freezer", "refrigerator", "pantry", "None");
+    newIngredientStorageType.getItems().addAll("freezer", "refrigerator", "pantry");
+    newIngredientStorageType.getSelectionModel().selectFirst();
+    newMenuItemType.getItems().addAll("entree", "side", "appetizer", "drink");
+    newMenuItemType.getSelectionModel().selectFirst();
 
     refreshInventory();
     refreshMenu();
@@ -298,10 +322,78 @@ public class InventoryController {
 
   // ======================== MENU ========================
   @FXML
+  private void addIngredient() {
+    String name = newIngredientName.getText().trim();
+    String units = newIngredientUnits.getText().trim();
+    String storage = newIngredientStorageType.getValue();
+    if (name.isEmpty() || units.isEmpty() || storage == null) {
+      seasonalStatusLabel.setText("Enter a name, units, and storage type.");
+      return;
+    }
+
+    double quantity;
+    double minQuantity;
+    int shelfLife;
+    try {
+      quantity = Double.parseDouble(newIngredientQty.getText().trim());
+      minQuantity = Double.parseDouble(newIngredientMinQty.getText().trim());
+      shelfLife = Integer.parseInt(newIngredientShelfLife.getText().trim());
+    } catch (NumberFormatException e) {
+      seasonalStatusLabel.setText("Quantity, min qty, and shelf life must be numbers.");
+      return;
+    }
+    if (!Double.isFinite(quantity) || quantity < 0 || !Double.isFinite(minQuantity) || minQuantity < 0
+        || shelfLife <= 0) {
+      seasonalStatusLabel.setText("Quantities must be >= 0 and shelf life must be > 0.");
+      return;
+    }
+
+    Connection conn = connectDb();
+    if (conn == null) {
+      seasonalStatusLabel.setText("Could not connect to the database.");
+      return;
+    }
+
+    try (PreparedStatement insert = conn.prepareStatement(
+        "INSERT INTO ingredients (ingredient_name, quantity_in_stock, storage_type, expiry_date, " +
+            "min_qty_on_hand, measurement_units, shelf_life_days) " +
+            "VALUES (?, ?, ?::storage_type, CURRENT_DATE + ?, ?, ?, ?)")) {
+      insert.setString(1, name);
+      insert.setDouble(2, quantity);
+      insert.setString(3, storage);
+      insert.setInt(4, shelfLife);
+      insert.setDouble(5, minQuantity);
+      insert.setString(6, units);
+      insert.setInt(7, shelfLife);
+      insert.executeUpdate();
+
+      seasonalStatusLabel.setText("Added ingredient " + name + ".");
+      newIngredientName.clear();
+      newIngredientQty.clear();
+      newIngredientUnits.clear();
+      newIngredientMinQty.clear();
+      newIngredientShelfLife.clear();
+    } catch (Exception e) {
+      System.out.println("Error adding ingredient:\n" + e.getMessage());
+      seasonalStatusLabel.setText("Error adding ingredient.");
+      return;
+    } finally {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    loadIngredientOptions();
+    refreshInventory();
+  }
+
+  @FXML
   private void addMenuItem() {
     String name = newMenuItemNameField.getText().trim();
     if (name.isEmpty()) {
-      menuStatusLabel.setText("Enter a name for the menu item.");
+      seasonalStatusLabel.setText("Enter a name for the menu item.");
       return;
     }
 
@@ -312,11 +404,97 @@ public class InventoryController {
       }
     }
     if (chosen.isEmpty()) {
-      menuStatusLabel.setText("Select at least one ingredient.");
+      seasonalStatusLabel.setText("Select at least one ingredient.");
       return;
     }
 
-    // insert into menu_items, then one row per chosen ingredient (see below)
+    String type = newMenuItemType.getValue();
+    if (type == null) {
+      seasonalStatusLabel.setText("Choose a menu item type.");
+      return;
+    }
+
+    double premiumCharge = 0.0;
+    String premiumText = newMenuItemPremiumCharge.getText().trim();
+    double servings = 1.0;
+    String servingsText = newMenuItemServingsUsed.getText().trim();
+    try {
+      if (!premiumText.isEmpty()) {
+        premiumCharge = Double.parseDouble(premiumText);
+      }
+      if (!servingsText.isEmpty()) {
+        servings = Double.parseDouble(servingsText);
+      }
+    } catch (NumberFormatException e) {
+      seasonalStatusLabel.setText("Premium charge and servings must be numbers.");
+      return;
+    }
+    if (!Double.isFinite(premiumCharge) || premiumCharge < 0 || !Double.isFinite(servings) || servings <= 0) {
+      seasonalStatusLabel.setText("Premium charge must be >= 0 and servings must be > 0.");
+      return;
+    }
+
+    Connection conn = connectDb();
+    if (conn == null) {
+      seasonalStatusLabel.setText("Could not connect to the database.");
+      return;
+    }
+
+    try {
+      conn.setAutoCommit(false);
+      int menuItemId;
+      try (PreparedStatement insertItem = conn.prepareStatement(
+          "INSERT INTO menu_items (menu_item_name, premium_charge, active, menu_item_type) " +
+              "VALUES (?, ?, TRUE, ?::menu_item_type)",
+          Statement.RETURN_GENERATED_KEYS)) {
+        insertItem.setString(1, name);
+        insertItem.setDouble(2, premiumCharge);
+        insertItem.setString(3, type);
+        insertItem.executeUpdate();
+        try (ResultSet keys = insertItem.getGeneratedKeys()) {
+          keys.next();
+          menuItemId = keys.getInt("menu_item_id");
+        }
+      }
+
+      try (PreparedStatement insertDetail = conn.prepareStatement(
+          "INSERT INTO menu_item_details (menu_item_id, ingredient_id, ingredient_quantity) VALUES (?, ?, ?)")) {
+        for (IngredientOption option : chosen) {
+          insertDetail.setInt(1, menuItemId);
+          insertDetail.setInt(2, option.id());
+          insertDetail.setDouble(3, servings);
+          insertDetail.addBatch();
+        }
+        insertDetail.executeBatch();
+      }
+      conn.commit();
+
+      seasonalStatusLabel.setText("Added " + name + ".");
+      newMenuItemNameField.clear();
+      newMenuItemPremiumCharge.clear();
+      newMenuItemServingsUsed.clear();
+      newMenuItemType.getSelectionModel().selectFirst();
+      for (IngredientOption option : ingredientOptions) {
+        option.selected().set(false);
+      }
+    } catch (Exception e) {
+      System.out.println("Error adding menu item:\n" + e.getMessage());
+      try {
+        conn.rollback();
+      } catch (SQLException rollbackError) {
+        rollbackError.printStackTrace();
+      }
+      seasonalStatusLabel.setText("Error adding menu item.");
+      return;
+    } finally {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
+    refreshMenu();
   }
 
   @FXML
