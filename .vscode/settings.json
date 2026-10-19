@@ -1,3 +1,6 @@
 {
-  "java.project.referencedLibraries": ["/Users/willsigg/Downloads/javafx-sdk-26/lib/*.jar"]
+  "java.project.referencedLibraries": [
+    "${workspaceFolder}/javafx-sdk-25/lib/*.jar",
+    "${workspaceFolder}/postgresql-42.2.8.jar"
+  ]
 }

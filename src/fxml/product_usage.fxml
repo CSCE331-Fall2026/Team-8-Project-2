@@ -32,20 +32,22 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProductUsageController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -88,21 +90,24 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
             <Text layoutX="14.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product Usage">
                <font>
                   <Font size="26.0" />
                </font>
             </Text>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="255.0" layoutX="14.0" layoutY="104.0" stroke="BLACK" strokeType="INSIDE" width="614.0" />
+            <Button layoutX="573.0" layoutY="14.0" mnemonicParsing="false" onAction="#goBack" text="Back" />
+            <BarChart fx:id="usageChart" animated="false" legendVisible="false" layoutX="14.0" layoutY="104.0" prefHeight="255.0" prefWidth="614.0">
+              <xAxis>
+                <CategoryAxis label="Inventory Item" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis label="Amount Used" />
+              </yAxis>
+            </BarChart>
             <Text layoutX="14.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inventory Item" />
-            <ChoiceBox layoutX="14.0" layoutY="71.0" prefHeight="26.0" prefWidth="169.0" />
-            <DatePicker layoutX="220.0" layoutY="71.0" />
-            <DatePicker layoutX="442.0" layoutY="71.0" />
+            <MenuButton fx:id="itemPicker" layoutX="14.0" layoutY="71.0" prefHeight="26.0" prefWidth="169.0" text="All" />
+            <DatePicker fx:id="startDatePicker" layoutX="220.0" layoutY="71.0" />
+            <DatePicker fx:id="endDatePicker" layoutX="442.0" layoutY="71.0" />
             <Text layoutX="220.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Report Start Date" />
             <Text layoutX="442.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Report End Date" />
       </children>
