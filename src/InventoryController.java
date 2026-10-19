@@ -39,6 +39,7 @@ public class InventoryController {
 
   // new menu item fx:ids are newMenuItemXXXX
   // new ingredient fx:ids are newIngredientXXXX
+  // make sure to fill in the choiceboxes with the types of ingredients and menu items that we have
 
   @FXML
   private TableView<InventoryRow> inventoryTable;
