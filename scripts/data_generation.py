@@ -6,77 +6,77 @@ random.seed(42)
 PEAK_DAYS = [datetime(2024, 10, 4), datetime(2025, 11, 26)]
 PEAK_COPIES = 2
 
-# menu_item_id, menu_item_name, premium_charge
+# menu_item_id, menu_item_name, premium_charge, menu_item_type
 MENU_ITEMS = [
-    (1, "The Original Orange Chicken", 7.45),
-    (2, "Honey Walnut Shrimp (Premium)", 8.40),
-    (3, "Beijing Beef", 8.50),
-    (4, "Broccoli Beef", 7.95),
-    (5, "Grilled Teriyaki Chicken", 7.30),
-    (6, "Kung Pao Chicken", 7.15),
-    (7, "Honey Sesame Chicken Breast", 7.75),
-    (8, "Black Pepper Chicken", 7.15),
-    (9, "Mushroom Chicken", 7.10),
-    (10, "String Bean Chicken Breast", 7.65),
-    (11, "SweetFire Chicken Breast", 7.60),
-    (12, "Black Pepper Sirloin Steak (Premium)", 8.80),
-    (13, "Chow Mein", 5.45),
-    (14, "Fried Rice", 5.15),
-    (15, "Super Greens", 5.15),
-    (16, "White Steamed Rice", 3.95),
-    (17, "Brown Steamed Rice", 3.95),
-    (18, "Chicken Egg Roll", 1.95),
-    (19, "Veggie Spring Roll", 1.75),
-    (20, "Cream Cheese Rangoon", 2.35),
-    (21, "Chicken Potstickers", 4.95),
-    (22, "Apple Pie Roll", 2.25),
-    (23, "Soda", 2.19),
+    (1, "The Original Orange Chicken", 0.0, "entree"),
+    (2, "Honey Walnut Shrimp (Premium)", 2.50, "entree"),
+    (3, "Beijing Beef", 0.0, "entree"),
+    (4, "Broccoli Beef", 0.0, "entree"),
+    (5, "Grilled Teriyaki Chicken", 0.0, "entree"),
+    (6, "Kung Pao Chicken", 0.0, "entree"),
+    (7, "Honey Sesame Chicken Breast", 0.0, "entree"),
+    (8, "Black Pepper Chicken", 0.0, "entree"),
+    (9, "Mushroom Chicken", 0.0, "entree"),
+    (10, "String Bean Chicken Breast", 0.0, "entree"),
+    (11, "SweetFire Chicken Breast", 0.0, "entree"),
+    (12, "Black Pepper Sirloin Steak (Premium)", 2.50, "entree"),
+    (13, "Chow Mein", 0.0, "side"),
+    (14, "Fried Rice", 0.0, "side"),
+    (15, "Super Greens", 0.0, "side"),
+    (16, "White Steamed Rice", 0.0, "side"),
+    (17, "Brown Steamed Rice", 0.0, "side"),
+    (18, "Chicken Egg Roll", 2.00, "appetizer"),
+    (19, "Veggie Spring Roll", 1.75, "appetizer"),
+    (20, "Cream Cheese Rangoon", 2.35, "appetizer"),
+    (21, "Chicken Potstickers", 4.95, "appetizer"),
+    (22, "Apple Pie Roll", 2.25, "appetizer"),
+    (23, "Soda", 2.19, "drink"),
 ]
 
-# ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units
+# ingredient_id, ingredient_name, qty_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units, shelf_life_days
 INGREDIENTS = [
-    (1, "Rice", 180.0, "pantry", 0.55, 40.0, "lb"),
-    (2, "Brown Rice", 170.0, "pantry", 0.60, 40.0, "lb"),
-    (3, "Chicken", 75.0, "refrigerator", 2.25, 50.0, "lb"),
-    (4, "Beef", 42.0, "freezer", 3.30, 40.0, "lb"),
-    (5, "Shrimp", 32.0, "freezer", 3.80, 20.0, "lb"),
-    (6, "Broccoli", 80.0, "refrigerator", 0.70, 35.0, "lb"),
-    (7, "Mushrooms", 48.0, "refrigerator", 0.95, 20.0, "lb"),
-    (8, "Green Beans", 60.0, "refrigerator", 0.85, 20.0, "lb"),
-    (9, "Bell Pepper", 70.0, "refrigerator", 0.60, 20.0, "lb"),
-    (10, "Onion", 85.0, "pantry", 0.30, 30.0, "lb"),
-    (11, "Carrots", 95.0, "refrigerator", 0.45, 30.0, "lb"),
-    (12, "Pineapple", 45.0, "refrigerator", 0.90, 20.0, "lb"),
-    (13, "Orange Sauce", 90.0, "pantry", 0.75, 50.0, "bottle"),
-    (14, "Walnuts", 35.0, "pantry", 1.10, 20.0, "lb"),
-    (15, "Honey", 50.0, "pantry", 0.90, 30.0, "bottle"),
-    (16, "Sesame Seeds", 25.0, "pantry", 0.50, 72.0, "oz"),
-    (17, "Soy Sauce", 95.0, "pantry", 0.35, 40.0, "bottle"),
-    (18, "Chow Mein Noodles", 110.0, "pantry", 0.80, 75.0, "lb"),
-    (19, "Egg Roll Wrapper", 70.0, "pantry", 0.25, 100.0, "each"),
-    (20, "Spring Roll Wrapper", 70.0, "pantry", 0.40, 100.0, "each"),
-    (21, "Cream Cheese", 30.0, "refrigerator", 1.20, 25.0, "lb"),
-    (22, "Wonton Wrapper", 75.0, "pantry", 0.30, 100.0, "each"),
-    (23, "Apple Pie Filling", 40.0, "refrigerator", 0.85, 20.0, "lb"),
-    (24, "Cucumber", 60.0, "refrigerator", 0.40, 40.0, "lb"),
-    (25, "Cabbage", 65.0, "refrigerator", 0.35, 50.0, "lb"),
-    (26, "Tomato", 55.0, "refrigerator", 0.50, 50.0, "lb"),
-    (27, "Garlic", 45.0, "pantry", 0.20, 35.0, "head"),
-    (28, "Ginger", 35.0, "refrigerator", 0.25, 20.0, "lb"),
-    (29, "Egg", 80.0, "refrigerator", 0.35, 120.0, "each"),
-    (30, "Sweet Chili Sauce", 55.0, "pantry", 0.70, 50.0, "bottle"),
-    (31, "Teriyaki Sauce", 60.0, "pantry", 0.65, 50.0, "bottle"),
-    (32, "Black Pepper", 28.0, "pantry", 0.22, 48.0, "oz"),
-    (33, "Carbonated Water", 200.0, "pantry", 0.08, 150.0, "liter"),
-    (34, "Soda Syrup", 120.0, "pantry", 0.90, 100.0, "liter"),
-    (35, "Cup", 250.0, "pantry", 0.08, 100.0, "each"),
-    (36, "Bowl", 200.0, "pantry", 0.12, 80.0, "each"),
-    (37, "Plate", 200.0, "pantry", 0.15, 80.0, "each"),
+    (1, "Rice", 180.0, "pantry", 0.55, 40.0, "lb", 21),
+    (2, "Brown Rice", 170.0, "pantry", 0.60, 40.0, "lb", 21),
+    (3, "Chicken", 75.0, "refrigerator", 2.25, 50.0, "lb", 14),
+    (4, "Beef", 42.0, "freezer", 3.30, 40.0, "lb", 31),
+    (5, "Shrimp", 32.0, "freezer", 3.80, 20.0, "lb", 31),
+    (6, "Broccoli", 80.0, "refrigerator", 0.70, 35.0, "lb", 21),
+    (7, "Mushrooms", 48.0, "refrigerator", 0.95, 20.0, "lb", 21),
+    (8, "Green Beans", 60.0, "refrigerator", 0.85, 20.0, "lb", 21),
+    (9, "Bell Pepper", 70.0, "refrigerator", 0.60, 20.0, "lb", 21),
+    (10, "Onion", 85.0, "pantry", 0.30, 30.0, "lb", 14),
+    (11, "Carrots", 95.0, "refrigerator", 0.45, 30.0, "lb", 21),
+    (12, "Pineapple", 45.0, "refrigerator", 0.90, 20.0, "lb", 14),
+    (13, "Orange Sauce", 90.0, "pantry", 0.75, 50.0, "bottle", 31),
+    (14, "Walnuts", 35.0, "pantry", 1.10, 20.0, "lb", 31),
+    (15, "Honey", 50.0, "pantry", 0.90, 30.0, "bottle", 365),
+    (16, "Sesame Seeds", 25.0, "pantry", 0.50, 72.0, "oz", 62),
+    (17, "Soy Sauce", 95.0, "pantry", 0.35, 40.0, "bottle", 180),
+    (18, "Chow Mein Noodles", 110.0, "refrigerator", 0.80, 75.0, "lb", 21),
+    (19, "Egg Roll Wrapper", 70.0, "pantry", 0.25, 100.0, "each", 365),
+    (20, "Spring Roll Wrapper", 70.0, "pantry", 0.40, 100.0, "each", 365),
+    (21, "Cream Cheese", 30.0, "refrigerator", 1.20, 25.0, "lb", 21),
+    (22, "Wonton Wrapper", 75.0, "pantry", 0.30, 100.0, "each", 365),
+    (23, "Apple Pie Filling", 40.0, "refrigerator", 0.85, 20.0, "lb", 31),
+    (24, "Cucumber", 60.0, "refrigerator", 0.40, 40.0, "lb", 14),
+    (25, "Cabbage", 65.0, "refrigerator", 0.35, 50.0, "lb", 14),
+    (26, "Tomato", 55.0, "refrigerator", 0.50, 50.0, "lb", 14),
+    (27, "Garlic", 45.0, "pantry", 0.20, 35.0, "head", 21),
+    (28, "Ginger", 35.0, "refrigerator", 0.25, 20.0, "lb", 14),
+    (29, "Egg", 80.0, "refrigerator", 0.35, 120.0, "each", 21),
+    (30, "Sweet Chili Sauce", 55.0, "pantry", 0.70, 50.0, "bottle", 180),
+    (31, "Teriyaki Sauce", 60.0, "pantry", 0.65, 50.0, "bottle", 180),
+    (32, "Black Pepper", 28.0, "pantry", 0.22, 48.0, "oz", 180),
+    (33, "Carbonated Water", 200.0, "pantry", 0.08, 150.0, "liter", 365),
+    (34, "Soda Syrup", 120.0, "pantry", 0.90, 100.0, "liter", 180),
+    (35, "Cup", 250.0, "pantry", 0.08, 100.0, "each", 1000),
+    (36, "Bowl", 200.0, "pantry", 0.12, 80.0, "each", 1000),
+    (37, "Plate", 200.0, "pantry", 0.15, 80.0, "each", 1000),
 ]
 
 MENU_INGREDIENT_MAP = {
     "The Original Orange Chicken": ["Chicken", "Broccoli", "Carrots", "Orange Sauce"],
-    "Honey Walnut Shrimp (Premium)": ["Shrimp", "Walnuts", "Honey", "Broccoli"],
+    "Honey Walnut Shrimp (Premium)": ["Shrimp", "Walnuts", "Honey"],
     "Beijing Beef": ["Beef", "Bell Pepper", "Onion", "Soy Sauce"],
     "Broccoli Beef": ["Beef", "Broccoli", "Onion", "Soy Sauce"],
     "Grilled Teriyaki Chicken": ["Chicken", "Broccoli", "Carrots", "Teriyaki Sauce"],
@@ -89,7 +89,7 @@ MENU_INGREDIENT_MAP = {
     "Black Pepper Sirloin Steak (Premium)": ["Beef", "Bell Pepper", "Onion", "Black Pepper"],
     "Chow Mein": ["Chow Mein Noodles", "Cabbage", "Carrots", "Onion", "Soy Sauce"],
     "Fried Rice": ["Rice", "Egg", "Carrots", "Onion", "Soy Sauce"],
-    "Super Greens": ["Broccoli", "Green Beans", "Carrots", "Mushrooms", "Rice"],
+    "Super Greens": ["Broccoli", "Green Beans", "Carrots", "Mushrooms"],
     "White Steamed Rice": ["Rice"],
     "Brown Steamed Rice": ["Brown Rice"],
     "Chicken Egg Roll": ["Chicken", "Cabbage", "Carrots", "Egg Roll Wrapper", "Soy Sauce"],
@@ -98,11 +98,6 @@ MENU_INGREDIENT_MAP = {
     "Chicken Potstickers": ["Chicken", "Wonton Wrapper", "Cabbage", "Ginger", "Garlic"],
     "Apple Pie Roll": ["Apple Pie Filling", "Wonton Wrapper", "Egg"],
     "Soda": ["Carbonated Water", "Soda Syrup", "Cup"],
-}
-
-PREMIUM_CHARGES = {
-    "Honey Walnut Shrimp (Premium)": 2.50,
-    "Black Pepper Sirloin Steak (Premium)": 2.50,
 }
 
 # Combo options for the code to pick from
@@ -168,15 +163,21 @@ def build_insert_sql(table_name, columns, rows):
         value_rows.append("(" + ", ".join(format_sql_value(v) for v in row) + ")")
     return f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES\n" + ",\n".join(value_rows) + ";\n\n"
 
+def build_sequence_resets(tables):
+    sql = ""
+    for table, pk in tables:
+        sql += f"SELECT setval(pg_get_serial_sequence('{table}', '{pk}'), (SELECT MAX({pk}) FROM {table}));\n"
+    return sql + "\n"
 
 def generate_menu_items():
     return [
         {
             "menu_item_id": item_id,
             "menu_item_name": name,
-            "premium_charge": PREMIUM_CHARGES.get(name, 0.0),
+            "premium_charge": premium_charge,
+            "menu_item_type": menu_item_type,
         }
-        for item_id, name, price in MENU_ITEMS
+        for item_id, name, premium_charge, menu_item_type in MENU_ITEMS
     ]
 
 
@@ -184,44 +185,42 @@ def generate_static_rows():
     menu_items = generate_menu_items()
     combos = generate_combos()
     menu_item_details_rows = generate_menu_item_details_rows(menu_items)
+    ingredient_rows = build_ingredient_rows()
 
     return {
         "menu_items": menu_items,
         "combos": combos,
         "menu_item_details_rows": menu_item_details_rows,
+        "ingredient_rows": ingredient_rows,
     }
 
 
 def build_ingredient_rows():
     now = datetime.now()
     ingredient_rows = []
-    for ingredient_id, name, quantity_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units in INGREDIENTS:
+    for ingredient_id, name, quantity_in_stock, storage_type, ingredient_cost, min_qty_on_hand, measurement_units, shelf_life_days in INGREDIENTS:
         ingredient_rows.append(
             {
                 "ingredient_id": ingredient_id,
                 "ingredient_name": name,
-                "quantity_in_stock": round(random.uniform(quantity_in_stock * 0.85, quantity_in_stock * 1.15), 2),
+                "quantity_in_stock": round(random.uniform(quantity_in_stock * 0.85, quantity_in_stock * 1.15), 0),
                 "storage_type": storage_type,
                 "ingredient_cost": round(ingredient_cost + random.uniform(-0.15, 0.35), 2),
-                "expiry_date": random_datetime(
-                    now + timedelta(days=1),
-                    now + timedelta(days=730),
-                ),
+                "expiry_date": now + timedelta(days=random.randint(-5, shelf_life_days)),
                 "min_qty_on_hand": min_qty_on_hand,
                 "measurement_units": measurement_units,
+                "shelf_life_days": shelf_life_days,
             }
         )
     return ingredient_rows
 
 
 def generate_dynamic_rows(order_count, combos):
-    ingredient_rows = build_ingredient_rows()
     orders = generate_orders(order_count)
     order_detail_rows = generate_order_details(orders, combos)
     combo_detail_rows = generate_combo_details(order_detail_rows, combos)
 
     return {
-        "ingredient_rows": ingredient_rows,
         "orders": orders,
         "order_detail_rows": order_detail_rows,
         "combo_detail_rows": combo_detail_rows,
@@ -341,104 +340,143 @@ def generate_order_details(orders, combos):
     return rows
 
 
-def build_sql_script(order_count=10):
-    static_rows = generate_static_rows()
-    dynamic_rows = generate_dynamic_rows(order_count, static_rows["combos"])
-
+def build_sql_script(mode="static", order_count=10):
+    combos = generate_combos()
     sql_script = ""
-    sql_script += build_insert_sql(
-        "menu_items",
-        ["menu_item_id", "menu_item_name", "premium_charge"],
-        [
-            (row["menu_item_id"], row["menu_item_name"], row["premium_charge"])
-            for row in static_rows["menu_items"]
-        ],
-    )
-    sql_script += build_insert_sql(
-        "ingredients",
-        ["ingredient_id", "ingredient_name", "quantity_in_stock", "storage_type", "ingredient_cost", "expiry_date", "min_qty_on_hand", "measurement_units"],
-        [
-            (
-                row["ingredient_id"],
-                row["ingredient_name"],
-                row["quantity_in_stock"],
-                row["storage_type"],
-                row["ingredient_cost"],
-                row["expiry_date"],
-                row["min_qty_on_hand"],
-                row["measurement_units"],
-            )
-            for row in dynamic_rows["ingredient_rows"]
-        ],
-    )
-    sql_script += build_insert_sql(
-        "menu_item_details",
-        ["menu_item_detail_id", "menu_item_id", "ingredient_id", "ingredient_quantity"],
-        [
-            (
-                row["menu_item_detail_id"],
-                row["menu_item_id"],
-                row["ingredient_id"],
-                row["ingredient_quantity"],
-            )
-            for row in static_rows["menu_item_details_rows"]
-        ],
-    )
-    sql_script += build_insert_sql(
-        "combos",
-        ["combo_id", "combo_name", "combo_price"],
-        [
-            (row["combo_id"], row["combo_name"], row["combo_price"])
-            for row in static_rows["combos"]
-        ],
-    )
-    sql_script += build_insert_sql(
-        "orders",
-        ["order_id", "order_status", "created_at", "updated_at", "payment_method", "order_total"],
-        [
-            (
-                row["order_id"],
-                row["order_status"],
-                row["created_at"],
-                row["updated_at"],
-                row["payment_method"],
-                row["order_total"],
-            )
-            for row in dynamic_rows["orders"]
-        ],
-    )
-    sql_script += build_insert_sql(
-        "order_details",
-        ["order_detail_id", "combo_id", "order_id", "order_qty"],
-        [
-            (row["order_detail_id"], row["combo_id"], row["order_id"], row["order_qty"])
-            for row in dynamic_rows["order_detail_rows"]
-        ],
-    )
-    sql_script += build_insert_sql(
-        "combo_details",
-        ["combo_detail_id", "menu_item_id", "order_detail_id", "servings"],
-        [
-            (
-                row["combo_detail_id"],
-                row["menu_item_id"],
-                row["order_detail_id"],
-                row["servings"],
-            )
-            for row in dynamic_rows["combo_detail_rows"]
-        ],
-    )
+
+    if mode == "static":
+        static_rows = generate_static_rows()
+
+        sql_script += build_insert_sql(
+            "menu_items",
+            ["menu_item_id", "menu_item_name", "premium_charge", "menu_item_type"],
+            [
+                (row["menu_item_id"], row["menu_item_name"], row["premium_charge"], row["menu_item_type"])
+                for row in static_rows["menu_items"]
+            ],
+        )
+        sql_script += build_insert_sql(
+            "ingredients",
+            ["ingredient_id", "ingredient_name", "quantity_in_stock", "storage_type", "ingredient_cost", "expiry_date",
+             "min_qty_on_hand", "measurement_units", "shelf_life_days"],
+            [
+                (
+                    row["ingredient_id"],
+                    row["ingredient_name"],
+                    row["quantity_in_stock"],
+                    row["storage_type"],
+                    row["ingredient_cost"],
+                    row["expiry_date"],
+                    row["min_qty_on_hand"],
+                    row["measurement_units"],
+                    row["shelf_life_days"],
+                )
+                for row in static_rows["ingredient_rows"]
+            ],
+        )
+        sql_script += build_insert_sql(
+            "menu_item_details",
+            ["menu_item_detail_id", "menu_item_id", "ingredient_id", "ingredient_quantity"],
+            [
+                (
+                    row["menu_item_detail_id"],
+                    row["menu_item_id"],
+                    row["ingredient_id"],
+                    row["ingredient_quantity"],
+                )
+                for row in static_rows["menu_item_details_rows"]
+            ],
+        )
+        sql_script += build_insert_sql(
+            "combos",
+            ["combo_id", "combo_name", "combo_price"],
+            [
+                (row["combo_id"], row["combo_name"], row["combo_price"])
+                for row in static_rows["combos"]
+            ],
+        )
+
+        sql_script += build_sequence_resets([
+            ("menu_items", "menu_item_id"),
+            ("ingredients", "ingredient_id"),
+            ("menu_item_details", "menu_item_detail_id"),
+            ("combos", "combo_id"),
+        ])
+
+    if mode == "orders":
+        dynamic_rows = generate_dynamic_rows(order_count, combos)
+
+        sql_script += build_insert_sql(
+            "orders",
+            ["order_id", "order_status", "created_at", "updated_at", "payment_method", "order_total"],
+            [
+                (
+                    row["order_id"],
+                    row["order_status"],
+                    row["created_at"],
+                    row["updated_at"],
+                    row["payment_method"],
+                    row["order_total"],
+                )
+                for row in dynamic_rows["orders"]
+            ],
+        )
+        sql_script += build_insert_sql(
+            "order_details",
+            ["order_detail_id", "combo_id", "order_id", "order_qty"],
+            [
+                (row["order_detail_id"], row["combo_id"], row["order_id"], row["order_qty"])
+                for row in dynamic_rows["order_detail_rows"]
+            ],
+        )
+        sql_script += build_insert_sql(
+            "combo_details",
+            ["combo_detail_id", "menu_item_id", "order_detail_id", "servings"],
+            [
+                (
+                    row["combo_detail_id"],
+                    row["menu_item_id"],
+                    row["order_detail_id"],
+                    row["servings"],
+                )
+                for row in dynamic_rows["combo_detail_rows"]
+            ],
+        )
+
+        sql_script += build_sequence_resets([
+            ("orders", "order_id"),
+            ("order_details", "order_detail_id"),
+            ("combo_details", "combo_detail_id"),
+        ])
 
     return sql_script
 
 
 def main():
-    order_count = int(input("how many orders to generate? "))
-    script = build_sql_script(order_count=order_count)
-    output_path = Path(__file__).with_name("generated_data.sql")
-    output_path.write_text(script, encoding="utf-8")
-    print(f"Generated SQL script with {order_count} orders written to: {output_path}")
-    print(f"Rows generated: {script.count('INSERT INTO')}")
+    mode = input("Type of data to generate: static, orders, or quit: ")
+    while mode not in ("static", "orders", "quit"):
+        mode = input("Retry input - Type of data to generate: static, orders, or quit: ")
+
+    if mode == "quit":
+        return
+
+    order_count = 0
+    if mode == "orders":
+        order_count = int(input("how many orders to generate? "))
+
+    script = build_sql_script(mode=mode, order_count=order_count)
+
+    if mode == "orders":
+        output_path = Path(__file__).with_name("generated_orders.sql")
+        output_path.write_text(script, encoding="utf-8")
+        print(f"Generated SQL script with {order_count} orders written to: {output_path}")
+        print(f"Rows generated: {script.count('INSERT INTO')}")
+
+    else:
+        output_path = Path(__file__).with_name("generated_static_data.sql")
+        output_path.write_text(script, encoding="utf-8")
+        print(f"Generated SQL script with {order_count} orders written to: {output_path}")
+        print(f"Rows generated: {script.count('INSERT INTO')}")
 
 
 if __name__ == "__main__":
