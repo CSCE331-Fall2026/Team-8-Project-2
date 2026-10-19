@@ -336,4 +336,42 @@ itemMinQtyColumn.setComparator(Comparator.comparingDouble(Double::parseDouble));
 Each comparator receives the displayed strings, parses them back to numbers, and compares those. 
 It needs import java.util.Comparator;. It works because those cells only ever contain plain numbers. 
 If a cell could hold something unparseable, such as an empty string, parseInt would throw an exception during sorting.
+
+```
+### Prompt Used to Update Postgres Interval Counter After Generating Data
+
+How can I make it so this script will update the Postgres interval counter after generating both the static
+and random data
+
+```
+1. Add a helper function
+
+Put it right after build_insert_sql (which ends at line 164), before generate_menu_items:
+
+def build_sequence_resets(tables):
+    sql = ""
+    for table, pk in tables:
+        sql += f"SELECT setval(pg_get_serial_sequence('{table}', '{pk}'), (SELECT MAX({pk}) FROM {table}));\n"
+    return sql + "\n"
+
+2. Call it inside build_sql_script
+
+You split the modes, so each block gets its own reset for its own tables. Place each call as the last statement inside its if, after the final build_insert_sql(...).
+
+At the end of the if mode the combos insert (just before the blank line and if mode == "orders": around line 393):
+
+        sql_script += build_sequence_resets([
+            ("menu_items", "menu_item_id"),
+            ("ingredients", "ingredient_id"),
+            ("menu_item_details", "menu_item_details_id"),
+            ("combos", "combo_id"),
+        ])
+
+At the end of the if mode the combo_details insert(just before return sql_script):
+
+        sql_script += build_sequence_resets([
+            ("orders", "order_id"),
+            ("order_details", "order_detail_id"),
+            ("combo_details", "combo_detail_id"),
+        ]) 
 ```
