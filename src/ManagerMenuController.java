@@ -117,7 +117,7 @@ public class ManagerMenuController {
 
   @FXML
   private void openProductUsageChart(ActionEvent event) {
-    String fxmlPath = ""; // TODO: fill in
+    String fxmlPath = "fxml/product_usage.fxml";
     loadScreen(event, fxmlPath);
   }
 
