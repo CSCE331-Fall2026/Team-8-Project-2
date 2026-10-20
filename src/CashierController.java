@@ -139,7 +139,7 @@ public class CashierController {
         String createOrderDetailStatement =
           "INSERT INTO order_details (order_id, combo_id, order_qty) " +
           "VALUES " +
-          "(" + orderId + ", " + line.type().comboId() + ", 1) " + // currently hardcoded as 1 - update once cartItems holds quantity
+          "(" + orderId + ", " + line.type().comboId() + ", 1) " +
           "RETURNING order_detail_id"; 
         ResultSet orderDetailResult = stmt.executeQuery(createOrderDetailStatement);
         orderDetailResult.next();

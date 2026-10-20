@@ -96,14 +96,14 @@ public class ManagerMenuController {
   /** Opens the inventory view. */
   @FXML
   private void openViewInventory(ActionEvent event) {
-    String fxmlPath = "fxml/inventory_levels.fxml"; // TODO: fill in
+    String fxmlPath = "fxml/inventory_levels.fxml";
     loadScreen(event, fxmlPath);
   }
 
   /** Opens the inventory update view. */
   @FXML
   private void openUpdateInventory(ActionEvent event) {
-    String fxmlPath = "fxml/inventory_levels.fxml"; // TODO: fill in
+    String fxmlPath = "fxml/inventory_levels.fxml";
     loadScreen(event, fxmlPath);
   }
 
@@ -133,14 +133,14 @@ public class ManagerMenuController {
   /** Opens the hourly sales report. */
   @FXML
   private void openXReport(ActionEvent event) {
-    String fxmlPath = "fxml/sales_hour.fxml"; // TODO: fill in (sales_hour.fxml)
+    String fxmlPath = "fxml/sales_hour.fxml";
     loadScreen(event, fxmlPath);
   }
 
   /** Opens the revenue and cost report. */
   @FXML
   private void openRevenueCostReport(ActionEvent event) {
-    String fxmlPath = ""; // TODO: fill in
+    String fxmlPath = "";
     loadScreen(event, fxmlPath);
   }
 
