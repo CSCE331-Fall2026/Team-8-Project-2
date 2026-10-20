@@ -64,3 +64,5 @@ Perhaps if we had used an index between two different values that had a larger r
 ## Conclusion
 
 Although there is potential for optimization with indexes, we will not be using the index between order_status and date_created. The marginal improvements are not worth the extra storage space or larger update times, and we would rather just use standard look-ups.
+
+To expand, when querying, due to now adding a new category of index per order, a lot more storage space is taken up, especially due to the amount of data stored in the orders table. When writing, it would also take a bit longer due to having to index every new order. Orders are made much more often than the sales report is looked at, so overall, the addition of indexes is not a good idea for our case.
