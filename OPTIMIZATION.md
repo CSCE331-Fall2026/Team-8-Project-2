@@ -57,3 +57,10 @@ There seems to be a difference between the two times, but it's rather small and 
 
 ## Reflection
 
+While the query time does seem to change, very little change was observed after indexing. It is almost negligible. One major reason for this could be that a majority of our orders entered into the database have the paid status, as most costumers do not refund or cancel their orders. Thus, despite the indexing marginally increasing search-through speeds, the effects are minimal.
+
+Perhaps if we had used an index between two different values that had a larger representation in variety, then maybe indexes would be useful, but for this specific case, the effects are marginal at best.
+
+## Conclusion
+
+Although there is potential for optimization with indexes, we will not be using the index between order_status and date_created. The marginal improvements are not worth the extra storage space or larger update times, and we would rather just use standard look-ups.
