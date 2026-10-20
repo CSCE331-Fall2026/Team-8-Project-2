@@ -109,6 +109,9 @@ $env:JAVAFX_HOME = "C:\path\to\javafx-sdk-25"
 Open `docs/javadocs/index.html` after generation to browse the API
 documentation.
 
+### Link to our Javadocs:
+https://team-8-project-2.sthomas-9b2.workers.dev/
+
 # Database Schema and Design
 
 No AI was used to critique our database.
