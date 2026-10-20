@@ -37,6 +37,7 @@ public class ProductUsageController {
             "WHERE o.order_status = 'paid' AND o.created_at::date BETWEEN ? AND ? " +
             "GROUP BY i.ingredient_name ORDER BY i.ingredient_name";
 
+    /** Initializes date filters, ingredient choices, and the usage chart. */
     @FXML
     private void initialize() {
         startDatePicker.setValue(LocalDate.now().minusDays(30));
@@ -63,6 +64,7 @@ public class ProductUsageController {
     }
 
     // an empty selection shows every item
+    /** Returns the ingredient names selected in the chart filter. */
     private List<String> selectedItems() {
         return itemPicker.getItems().stream()
                 .map(item -> (CheckBox) ((CustomMenuItem) item).getContent())
@@ -71,6 +73,7 @@ public class ProductUsageController {
                 .toList();
     }
 
+    /** Loads usage for the selected date range and updates the chart. */
     private void refreshUsageChart() {
         usageChart.getData().clear();
         List<String> selected = selectedItems();
@@ -98,6 +101,7 @@ public class ProductUsageController {
         usageChart.getData().add(series);
     }
 
+    /** Returns to the manager screen. */
     @FXML
     private void goBack(ActionEvent event) {
         try {
@@ -114,6 +118,7 @@ public class ProductUsageController {
     // database connection
     private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db";
 
+    /** Opens a connection to the application database. */
     private Connection connectDb() throws Exception {
         dbSetup my = new dbSetup();
         Class.forName("org.postgresql.Driver");

@@ -9,28 +9,34 @@ public final class BuildState {
   private final ComboType type;
   private final List<MenuCatalog.MenuItem> selected = new ArrayList<>();
 
+  /** Creates an empty selection for the given combo type. */
   public BuildState(ComboType type) {
     this.type = type;
   }
 
+  /** Returns the combo type being built. */
   public ComboType type() {
     return type;
   }
 
+  /** Adds an item if its category still has room in this combo. */
   public void add(MenuCatalog.MenuItem item) {
     if (canAdd(item)) {
       selected.add(item);
     }
   }
 
+  /** Removes one matching item from the selection. */
   public void remove(MenuCatalog.MenuItem item) {
     selected.remove(item);
   }
 
+  /** Returns how many times the item appears in the selection. */
   public int countOf(MenuCatalog.MenuItem item) {
     return Collections.frequency(selected, item);
   }
 
+  /** Returns whether the selection satisfies the combo's item requirements. */
   public boolean isComplete() {
     if (type.isALaCarte()) {
       return selected.size() == 1;
@@ -41,6 +47,7 @@ public final class BuildState {
         && count(MenuCatalog.Category.APPETIZER) == type.requiredAppetizers();
   }
 
+  /** Returns the selected item names, or {@code (none)} when empty. */
   public String summary() {
     if (selected.isEmpty()) {
       return "(none)";
@@ -48,10 +55,12 @@ public final class BuildState {
     return selected.stream().map(MenuCatalog.MenuItem::name).collect(Collectors.joining(", "));
   }
 
+  /** Returns the combo name and selected items as a cart description. */
   public String cartLine() {
     return type.displayName() + ": " + summary();
   }
 
+  /** Returns the categories available for the current combo type. */
   public List<MenuCatalog.Category> visibleCategories() {
     if (type.isALaCarte()) {
       return List.of(
@@ -66,10 +75,12 @@ public final class BuildState {
     return categories;
   }
 
+  /** Returns an immutable snapshot of the selected items. */
   public List<MenuCatalog.MenuItem> items() {
     return List.copyOf(selected);
   }
 
+  /** Checks whether the item can be added without exceeding its category limit. */
   private boolean canAdd(MenuCatalog.MenuItem item) {
     if (type.isALaCarte()) {
       return selected.isEmpty() && item.category() != MenuCatalog.Category.DRINK;
@@ -77,6 +88,7 @@ public final class BuildState {
     return count(item.category()) < type.limitFor(item.category());
   }
 
+  /** Counts selected items in the given category. */
   private long count(MenuCatalog.Category category) {
     return selected.stream().filter(item -> item.category() == category).count();
   }

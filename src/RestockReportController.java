@@ -66,20 +66,25 @@ public class RestockReportController {
         public final String storageLabel;
         public final String dbLabel;
 
+        /** Returns the label shown in the storage filter. */
         @Override
         public String toString() { return storageLabel; }
 
+        /** Returns the storage value used by the database. */
         public String getDbLabel() { return dbLabel; }
     }
 
+    /** Returns whether an ingredient is below its minimum or expired. */
     private boolean isCritical(RestockRow row) {
         return row.itemQty() <= row.itemMinQty() || row.timeTilExpiry() <= 0;
     }
 
+    /** Returns whether an ingredient is near its minimum or expiry date. */
     private boolean isWarning(RestockRow row) {
         return row.itemQty() <= row.itemMinQty() * 1.5 || row.timeTilExpiry() <= 7;
     }
 
+    /** Applies the selected storage filter to critical and warning items. */
     private void applyFilter() {
         StorageType selected = storageTypePicker.getValue();
 
@@ -93,6 +98,7 @@ public class RestockReportController {
     private final ObservableList<RestockRow> restockItems = FXCollections.observableArrayList();
     private FilteredList<RestockRow> filteredItems;
 
+    /** Initializes the restock table, filters, and initial report data. */
     @FXML
     private void initialize() {
         filteredItems = new FilteredList<>(restockItems, row -> isCritical(row) || isWarning(row));
@@ -137,6 +143,7 @@ public class RestockReportController {
         timeTilExpiryColumn.setComparator(Comparator.comparingInt(Integer::parseInt));
 
         restockReportTable.setRowFactory(tableView -> new TableRow<>() {
+            /** Highlights rows based on their restock urgency. */
             @Override
             protected void updateItem(RestockRow row, boolean empty) {
                 super.updateItem(row, empty);
@@ -156,6 +163,7 @@ public class RestockReportController {
         restockReportTable.getSortOrder().add(idColumn);
     }
 
+    /** Loads ingredient quantities and expiry details for the report. */
     @FXML
     private void refreshRestockReport() {
         restockItems.clear();
@@ -209,6 +217,7 @@ public class RestockReportController {
         }
     }
 
+    /** Returns to the manager screen. */
     @FXML
     private void goBack(ActionEvent event) {
         try {
@@ -226,6 +235,7 @@ public class RestockReportController {
     private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; // database
                                                                                                      // location
 
+    /** Opens a connection to the application database. */
     private Connection connectDb() {
 
         try { 

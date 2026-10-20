@@ -18,10 +18,12 @@ public final class MenuCatalog {
 
     private final String dbValue;
 
+    /** Associates a category with its database value. */
     Category(String dbValue) {
       this.dbValue = dbValue;
     }
 
+    /** Returns the category matching a database value, or {@code null} if none matches. */
     public static Category fromDb(String value) {
       for (Category category : values()) {
         if (category.dbValue.equalsIgnoreCase(value)) {
@@ -57,8 +59,10 @@ public final class MenuCatalog {
 
   private static Map<Category, List<MenuItem>> itemsByCategory = emptyCatalog();
 
+  /** Prevents construction of this static catalog utility. */
   private MenuCatalog() {}
 
+  /** Reloads the active menu items from the database. */
   public static void refresh(Connection conn) {
     if (conn == null) {
       return;
@@ -92,18 +96,12 @@ public final class MenuCatalog {
     itemsByCategory = loaded;
   }
 
-  /**
-   * @param category the menu category
-   * @return the items in the category
-   */
+  /** Returns the menu items currently loaded for a category. */
   public static List<MenuItem> items(Category category) {
     return itemsByCategory.get(category);
   }
 
-  /**
-   * @param category the menu category
-   * @return the category display label
-   */
+  /** Returns the display label for a category. */
   public static String label(Category category) {
     return switch (category) {
       case SIDE -> "Sides";
@@ -113,6 +111,7 @@ public final class MenuCatalog {
     };
   }
 
+  /** Creates an empty item list for each menu category. */
   private static Map<Category, List<MenuItem>> emptyCatalog() {
     Map<Category, List<MenuItem>> catalog = new EnumMap<>(Category.class);
     for (Category category : Category.values()) {

@@ -31,6 +31,7 @@ public class XReportController {
 
     private final ObservableList<HourRow> hourItems = FXCollections.observableArrayList();
 
+    /** Initializes the hourly sales table and loads today's data. */
     @FXML
     private void initialize() {
         salesHourTable.setItems(hourItems);
@@ -43,8 +44,9 @@ public class XReportController {
         refreshSalesPerHour();
     }
 
-    @FXML
-    private void refreshSalesPerHour() {
+      /** Loads today's paid sales grouped by hour. */
+      @FXML
+      private void refreshSalesPerHour() {
         hourItems.clear();
 
         Connection conn = connectDb();
@@ -78,6 +80,7 @@ public class XReportController {
         }
     }
 
+    /** Returns to the manager screen. */
     @FXML
     private void goBack(ActionEvent event) {
         try {
@@ -95,6 +98,7 @@ public class XReportController {
     private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; // database
                                                                                                      // location
 
+    /** Opens a connection to the application database. */
     private Connection connectDb() {
 
         try {

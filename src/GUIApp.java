@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class GUIApp extends Application {
+  /** Loads and displays the main application window. */
   @Override
   public void start(Stage stage) throws Exception {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GUI.fxml"));
@@ -13,6 +14,7 @@ public class GUIApp extends Application {
     stage.show();
   }
 
+  /** Launches the JavaFX application. */
   public static void main(String[] args) {
     launch();
   }

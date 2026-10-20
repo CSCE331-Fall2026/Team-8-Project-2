@@ -60,6 +60,7 @@ public class SalesReportController {
         "ORDER BY mi.menu_item_name";
 
     private record MenuItemOption(int id, String name) {
+        /** Returns the menu item name displayed in the filter. */
         @Override
         public String toString() {
             return name;
@@ -69,6 +70,7 @@ public class SalesReportController {
     private record SalesRow(String itemName, double quantitySold, double premiumRevenue) {
     }
 
+    /** Initializes report columns, filters, and the initial result set. */
     @FXML
     private void initialize() {
         salesReportTable.setItems(salesRows);
@@ -107,6 +109,7 @@ public class SalesReportController {
         refreshReport();
     }
 
+    /** Loads paid sales matching the selected date range and menu item. */
     @FXML
     private void refreshReport() {
         salesRows.clear();
@@ -150,6 +153,7 @@ public class SalesReportController {
         }
     }
 
+    /** Returns to the manager screen. */
     @FXML
     private void goBack(ActionEvent event) {
         try {
@@ -166,6 +170,7 @@ public class SalesReportController {
 
     private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db";
 
+    /** Opens a connection to the application database. */
     private Connection connectDb() {
 
         try {

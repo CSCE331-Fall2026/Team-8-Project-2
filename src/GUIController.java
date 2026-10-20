@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 public class GUIController {
 
+  /** Opens the cashier screen in the current window. */
   @FXML
   private void openCashier(ActionEvent event) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("fxml/Cashier.fxml"));
@@ -16,6 +17,7 @@ public class GUIController {
     stage.setTitle("Cashier");
   }
 
+  /** Opens the manager screen in the current window. */
   @FXML
   private void openManager(ActionEvent event) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("fxml/manager.fxml"));

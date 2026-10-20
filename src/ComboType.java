@@ -21,6 +21,7 @@ public enum ComboType {
   private final int requiredDrinks;
   private final int requiredAppetizers;
 
+  /** Defines a combo and its required item counts and starting price. */
   ComboType(
       int comboId,
       String displayName,
@@ -38,6 +39,7 @@ public enum ComboType {
     this.requiredAppetizers = requiredAppetizers;
   }
 
+  /** Returns this combo's database identifier. */
   public int comboId() {
     return comboId;
   }
@@ -67,26 +69,32 @@ public enum ComboType {
     return price;
   }
 
+  /** Returns the display name shown in the cashier interface. */
   public String displayName() {
     return displayName;
   }
 
+  /** Returns the required number of sides. */
   public int requiredSides() {
     return requiredSides;
   }
 
+  /** Returns the required number of entrees. */
   public int requiredEntrees() {
     return requiredEntrees;
   }
 
+  /** Returns the required number of drinks. */
   public int requiredDrinks() {
     return requiredDrinks;
   }
 
+  /** Returns the required number of appetizers. */
   public int requiredAppetizers() {
     return requiredAppetizers;
   }
 
+  /** Returns the selection limit for the specified menu category. */
   public int limitFor(MenuCatalog.Category category) {
     return switch (category) {
       case SIDE -> requiredSides;
@@ -96,10 +104,12 @@ public enum ComboType {
     };
   }
 
+  /** Returns whether this is the a-la-carte combo type. */
   public boolean isALaCarte() {
     return this == A_LA_CARTE;
   }
 
+  /** Returns the selection prompt for this combo type. */
   public String progressText() {
     if (this == DRINK) {
       return "Pick 1 drink";

@@ -18,6 +18,7 @@ public class ManagerMenuController {
 
   private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; // database
 
+  /** Opens a connection to the application database. */
   private Connection connectDb() {
 
     try {
@@ -36,6 +37,7 @@ public class ManagerMenuController {
     }
   }
 
+  /** Loads inventory status values for the manager dashboard. */
   private void getStatus() {
     String needsRestockQuery =
         "SELECT COUNT(*) FROM ingredients WHERE quantity_in_stock < min_qty_on_hand";
@@ -67,6 +69,7 @@ public class ManagerMenuController {
 
   }
 
+  /** Initializes the manager dashboard. */
   @FXML
   private void initialize() {
 
@@ -74,6 +77,7 @@ public class ManagerMenuController {
 
   }
 
+  /** Returns to the main screen. */
   @FXML
   private void goBack(ActionEvent event) {
     try {
@@ -89,12 +93,14 @@ public class ManagerMenuController {
 
   // ======================== INVENTORY ========================
 
+  /** Opens the inventory view. */
   @FXML
   private void openViewInventory(ActionEvent event) {
     String fxmlPath = "fxml/inventory_levels.fxml"; // TODO: fill in
     loadScreen(event, fxmlPath);
   }
 
+  /** Opens the inventory update view. */
   @FXML
   private void openUpdateInventory(ActionEvent event) {
     String fxmlPath = "fxml/inventory_levels.fxml"; // TODO: fill in
@@ -103,30 +109,35 @@ public class ManagerMenuController {
 
   // ======================== REPORTS ========================
 
+  /** Opens the restock report. */
   @FXML
   private void openRestockReport(ActionEvent event) {
     String fxmlPath = "fxml/restock_report.fxml";
     loadScreen(event, fxmlPath);
   }
 
+  /** Opens the sales report. */
   @FXML
   private void openSalesReport(ActionEvent event) {
     String fxmlPath = "fxml/sales_report.fxml";
     loadScreen(event, fxmlPath);
   }
 
+  /** Opens the product usage chart. */
   @FXML
   private void openProductUsageChart(ActionEvent event) {
     String fxmlPath = "fxml/product_usage.fxml";
     loadScreen(event, fxmlPath);
   }
 
+  /** Opens the hourly sales report. */
   @FXML
   private void openXReport(ActionEvent event) {
     String fxmlPath = "fxml/sales_hour.fxml"; // TODO: fill in (sales_hour.fxml)
     loadScreen(event, fxmlPath);
   }
 
+  /** Opens the revenue and cost report. */
   @FXML
   private void openRevenueCostReport(ActionEvent event) {
     String fxmlPath = ""; // TODO: fill in
@@ -135,6 +146,7 @@ public class ManagerMenuController {
 
   // swaps the current scene's root for the given fxml (same approach as goBack in
   // ManagerController)
+  /** Loads the requested FXML view into the current window. */
   private void loadScreen(ActionEvent event, String fxmlPath) {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));

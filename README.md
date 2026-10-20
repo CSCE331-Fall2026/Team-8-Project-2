@@ -80,10 +80,11 @@ More detail: [`src/README.md`](src/README.md).
 
 ## Generate Javadocs
 
-Javadocs are generated from every Java source file under `src/` into the ignored
-`docs/javadocs/` directory. The generator uses the JavaFX SDK already required
-to compile the application and automatically checks `javafx-sdk-25/` and
-`javafx-sdk-27/` in the project root.
+Javadocs are generated from the application sources under `src/` into
+`docs/javadocs/`. Private methods are included, and the local
+`dbSetup.java` credentials file is excluded. The generator uses the JavaFX SDK
+already required to compile the application and automatically checks
+`javafx-sdk-25/` and `javafx-sdk-27/` in the project root.
 
 Windows PowerShell:
 

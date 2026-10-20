@@ -38,10 +38,12 @@ public class CashierController {
   private BuildState build;
   private int editIndex = -1;
 
+  /** Initializes the cart and hides the combo builder until a type is selected. */
   @FXML
   private void initialize() {
     cartList.setItems(cartItems);
     cartList.setCellFactory(list -> new ListCell<>() {
+      /** Displays the price and name for each cart line. */
       @Override
       protected void updateItem(CartLine item, boolean empty) {
         super.updateItem(item, empty);
@@ -62,17 +64,20 @@ public class CashierController {
     hideBuild();
   }
 
+  /** Starts building the combo type selected by the cashier. */
   @FXML
   private void startType(ActionEvent event) {
     Button source = (Button) event.getSource();
     beginBuild(ComboType.valueOf((String) source.getUserData()));
   }
 
+  /** Cancels the current combo build. */
   @FXML
   private void cancelBuild() {
     hideBuild();
   }
 
+  /** Removes the selected line from the cart. */
   @FXML
   private void removeSelectedCartItem() {
     int index = cartList.getSelectionModel().getSelectedIndex();
@@ -82,6 +87,7 @@ public class CashierController {
     }
   }
 
+  /** Reopens the selected cart line in the combo builder for editing. */
   @FXML
   private void editSelectedCartItem() {
     int index = cartList.getSelectionModel().getSelectedIndex();
@@ -96,12 +102,14 @@ public class CashierController {
     editIndex = index;
   }
 
+  /** Removes all lines from the cart. */
   @FXML
   private void clearCart() {
     cartItems.clear();
     refreshCart();
   }
 
+  /** Saves the cart as an order and updates ingredient inventory. */
   @FXML
   private void doneOrder() {
     if (cartItems.isEmpty()) {
@@ -197,6 +205,7 @@ public class CashierController {
     }
   }
 
+  /** Adds the completed combo to the cart the requested number of times. */
   @FXML
   private void addToCart() {
     if (build == null || !build.isComplete()) {
@@ -216,6 +225,7 @@ public class CashierController {
     hideBuild();
   }
 
+  /** Recalculates cart line prices and the displayed order total. */
   private void refreshCart() {
     Connection conn = connectDb();
     float total = 0f;
@@ -241,6 +251,7 @@ public class CashierController {
     cartTotalLabel.setText("Total: $" + String.format("%.2f", total));
   }
 
+  /** Creates a new combo build and loads its menu items. */
   private void beginBuild(ComboType type) {
     Connection conn = connectDb();
     if (conn != null) {
@@ -260,6 +271,7 @@ public class CashierController {
     setBuildVisible(true);
   }
 
+  /** Clears and hides the combo builder. */
   private void hideBuild() {
     build = null;
     editIndex = -1;
@@ -267,6 +279,7 @@ public class CashierController {
     setBuildVisible(false);
   }
 
+  /** Shows or hides the combo builder controls. */
   private void setBuildVisible(boolean visible) {
     buildSeparator.setVisible(visible);
     buildSeparator.setManaged(visible);
@@ -274,6 +287,7 @@ public class CashierController {
     buildPane.setManaged(visible);
   }
 
+  /** Recreates the selectable menu item controls for the current build. */
   private void rebuildItemButtons() {
     itemRows.getChildren().clear();
     if (build == null) {
@@ -305,12 +319,14 @@ public class CashierController {
     }
   }
 
+  /** Updates the combo progress, summary, and add-to-cart availability. */
   private void refreshBuildState() {
     buildProgressLabel.setText(build.type().progressText());
     buildSummaryLabel.setText("Selected: " + build.summary());
     addToCartButton.setDisable(!build.isComplete());
   }
 
+  /** Returns to the main screen. */
   @FXML
   private void goBack(ActionEvent event) {
     try {
@@ -328,6 +344,8 @@ public class CashierController {
 
   // database connection   
   private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; //database location
+
+  /** Opens a connection to the application database. */
   private Connection connectDb() {
 
     try {

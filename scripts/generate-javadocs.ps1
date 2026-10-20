@@ -23,7 +23,9 @@ if (-not $JavaFxHome -or -not (Test-Path (Join-Path $JavaFxHome "lib"))) {
 
 $javaFxLib = Join-Path $JavaFxHome "lib"
 $outputPath = Join-Path $projectRoot $OutputDirectory
-$sourceFiles = @(Get-ChildItem (Join-Path $projectRoot "src") -Filter "*.java" -Recurse | Select-Object -ExpandProperty FullName)
+$sourceFiles = @(Get-ChildItem (Join-Path $projectRoot "src") -Filter "*.java" -Recurse |
+  Where-Object { $_.Name -ne "dbSetup.java" } |
+  Select-Object -ExpandProperty FullName)
 
 if ($sourceFiles.Count -eq 0) {
   throw "No Java source files were found under src."
@@ -34,7 +36,7 @@ if (Test-Path $outputPath) {
 }
 
 New-Item $outputPath -ItemType Directory -Force | Out-Null
-& javadoc -d $outputPath --module-path $javaFxLib --add-modules javafx.controls,javafx.fxml $sourceFiles
+& javadoc -private -Xdoclint:all,-missing -d $outputPath --module-path $javaFxLib --add-modules javafx.controls,javafx.fxml $sourceFiles
 if ($LASTEXITCODE -ne 0) {
   throw "Javadoc generation failed with exit code $LASTEXITCODE."
 }

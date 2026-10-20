@@ -52,6 +52,7 @@ public class InventoryController {
   private ListView<IngredientOption> ingredientListView;
   private final ObservableList<IngredientOption> ingredientOptions = FXCollections.observableArrayList();
   private record IngredientOption(int id, String name, BooleanProperty selected) {
+    /** Returns the ingredient name used by list cells. */
     @Override
     public String toString() {
       return name;
@@ -126,6 +127,7 @@ public class InventoryController {
   private final ObservableList<ComboRow> comboItems = FXCollections.observableArrayList();
   private final ObservableList<MenuItemRow> menuItems = FXCollections.observableArrayList();
 
+  /** Initializes the inventory, combo, and menu item tables. */
   @FXML
   private void initialize() {
     // Inventory table
@@ -187,6 +189,7 @@ public class InventoryController {
 
   // ===================== INVENTORY =====================
 
+  /** Loads ingredients that can be assigned to a menu item. */
   private void loadIngredientOptions() {
     ingredientOptions.clear();
 
@@ -220,6 +223,7 @@ public class InventoryController {
     }
   }
 
+  /** Loads inventory rows using the selected storage filter. */
   @FXML
   private void refreshInventory() {
     inventoryItems.clear();
@@ -266,6 +270,7 @@ public class InventoryController {
     }
   }
 
+  /** Updates the selected ingredient quantity and recalculates its expiry date. */
   @FXML
   private void updateInventoryQuantity() {
     InventoryRow selected = inventoryTable.getSelectionModel().getSelectedItem();
@@ -321,6 +326,7 @@ public class InventoryController {
   }
 
   // ======================== MENU ========================
+  /** Adds a new ingredient using the entered inventory details. */
   @FXML
   private void addIngredient() {
     String name = newIngredientName.getText().trim();
@@ -389,6 +395,7 @@ public class InventoryController {
     refreshInventory();
   }
 
+  /** Adds a menu item and links it to the selected ingredients. */
   @FXML
   private void addMenuItem() {
     String name = newMenuItemNameField.getText().trim();
@@ -497,6 +504,7 @@ public class InventoryController {
     refreshMenu();
   }
 
+  /** Loads combo prices and active or discontinued menu items. */
   @FXML
   private void refreshMenu() {
     comboItems.clear();
@@ -547,6 +555,7 @@ public class InventoryController {
     }
   }
 
+  /** Updates the selected combo's base price. */
   @FXML
   private void updateComboPrice() {
     ComboRow selected = comboTable.getSelectionModel().getSelectedItem();
@@ -597,6 +606,7 @@ public class InventoryController {
     refreshMenu();
   }
 
+  /** Updates the premium charge for the selected menu item. */
   @FXML
   private void updatePremiumPrice() {
     MenuItemRow selected = menuItemTable.getSelectionModel().getSelectedItem();
@@ -647,6 +657,7 @@ public class InventoryController {
     refreshMenu();
   }
 
+  /** Marks the selected menu item as discontinued. */
   @FXML
   private void discontinueMenuItem() {
     MenuItemRow selected = menuItemTable.getSelectionModel().getSelectedItem();
@@ -694,6 +705,7 @@ public class InventoryController {
     refreshMenu();
   }
 
+  /** Reactivates the selected menu item. */
   @FXML
   private void reactivateMenuItem() {
     MenuItemRow selected = menuItemTable.getSelectionModel().getSelectedItem();
@@ -730,6 +742,7 @@ public class InventoryController {
     refreshMenu();
   }
 
+  /** Returns to the manager screen. */
   @FXML
   private void goBack(ActionEvent event) {
     try {
@@ -746,6 +759,7 @@ public class InventoryController {
   // database connection
   private static final String DB_URL = "jdbc:postgresql://csce-315-db.engr.tamu.edu:5432/team8db"; // database location
 
+  /** Opens a connection to the application database. */
   private Connection connectDb() {
 
     try {

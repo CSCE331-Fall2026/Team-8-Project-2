@@ -19,7 +19,7 @@ if [[ -z "$javafx_home" || ! -d "$javafx_home/lib" ]]; then
   exit 1
 fi
 
-mapfile -t source_files < <(find "$project_root/src" -type f -name '*.java' -print)
+mapfile -t source_files < <(find "$project_root/src" -type f -name '*.java' ! -name 'dbSetup.java' -print)
 if [[ "${#source_files[@]}" -eq 0 ]]; then
   echo "No Java source files were found under src." >&2
   exit 1
@@ -28,7 +28,7 @@ fi
 output_path="$project_root/$output_directory"
 rm -rf "$output_path"
 mkdir -p "$output_path"
-javadoc -d "$output_path" \
+javadoc -private -Xdoclint:all,-missing -d "$output_path" \
   --module-path "$javafx_home/lib" \
   --add-modules javafx.controls,javafx.fxml \
   "${source_files[@]}"
