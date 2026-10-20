@@ -111,7 +111,7 @@ public class ManagerMenuController {
 
   @FXML
   private void openSalesReport(ActionEvent event) {
-    String fxmlPath = ""; // TODO: fill in
+    String fxmlPath = "fxml/sales_report.fxml";
     loadScreen(event, fxmlPath);
   }
 
